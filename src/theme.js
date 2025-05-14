@@ -1,0 +1,68 @@
+import { createTheme } from "@mui/material/styles";
+
+const baseSettings = {
+  shape: {
+    borderRadius: 8,
+  },
+  typography: {
+    fontFamily: `'Roboto', 'Helvetica', 'Arial', sans-serif`,
+    button: {
+      textTransform: "none",
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          padding: "8px 20px",
+          fontWeight: 600,
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 14,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+        },
+      },
+    },
+  },
+};
+
+export const lightTheme = createTheme({
+  ...baseSettings,
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#1976d2",
+    },
+    secondary: {
+      main: "#f50057",
+    },
+  },
+});
+
+export const darkTheme = createTheme({
+  ...baseSettings,
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#90caf9",
+    },
+    secondary: {
+      main: "#f48fb1",
+    },
+    background: {
+      default: "#121212",
+      paper: "#1e1e1e",
+    },
+  },
+});
