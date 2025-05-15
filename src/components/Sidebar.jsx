@@ -9,13 +9,15 @@ import {
   Box,
   useTheme,
   useMediaQuery,
+  ListItemButton,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
-const drawerWidth = 240;
+export const drawerWidth = 240;
 
 const Sidebar = () => {
   const theme = useTheme();
+  const isMonitor = useMediaQuery(theme.breakpoints.up("lg"));
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -25,22 +27,22 @@ const Sidebar = () => {
   };
 
   const drawerContent = (
-    <Box sx={{ width: drawerWidth }}>
+    <Box>
       <Toolbar />
       <List>
-        <ListItem button>
+        <ListItemButton>
           <ListItemText primary="Dashboard" />
-        </ListItem>
-        <ListItem button>
+        </ListItemButton>
+        <ListItemButton>
           <ListItemText primary="Form Page" />
-        </ListItem>
+        </ListItemButton>
       </List>
     </Box>
   );
 
   return (
     <>
-      {isMobile && (
+      {!isMonitor && (
         <IconButton
           onClick={handleDrawerToggle}
           sx={{
@@ -55,12 +57,12 @@ const Sidebar = () => {
         </IconButton>
       )}
       <Drawer
-        variant={isMobile ? "temporary" : "permanent"}
-        open={isMobile ? mobileOpen : true}
+        variant={isMonitor ? "permanent" : "temporary"}
+        open={isMonitor ? true : mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
         sx={{
-          width: drawerWidth,
+          width: isMonitor ? drawerWidth : 0,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,

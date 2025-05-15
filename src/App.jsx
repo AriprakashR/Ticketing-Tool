@@ -12,6 +12,7 @@ import { lightTheme, darkTheme } from "./theme";
 import Header from "./components/Header";
 import ResponsiveBox from "./components/ResponsiveBox";
 import Sidebar from "./components/Sidebar";
+import { drawerWidth } from "./components/Sidebar";
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -27,10 +28,10 @@ function App() {
       <Box
         component="main"
         sx={{
-          flexGrow: 1,
-          ml: { md: 30 }, // margin for sidebar on desktop
           mt: 8,
           p: 2,
+          ml: { lg: `${drawerWidth}px` }, // push content right on monitor
+          transition: "margin 0.3s",
         }}
       >
         <ResponsiveBox />
