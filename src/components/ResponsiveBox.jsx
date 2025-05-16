@@ -17,19 +17,21 @@ const ResponsiveBox = () => {
   };
 
   return (
-    <Box
-      sx={{
-        p: 4,
-        borderRadius: 3,
-        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-        textAlign: "center",
-      }}
-    >
-      <Typography variant="h4">Responsive Layout</Typography>
-      <Typography variant="h6" sx={{ mt: 2 }}>
-        You are viewing this on: <strong>{getDevice()}</strong>
-      </Typography>
-    </Box>
+    <>
+      <Box
+        sx={{
+          p: 4,
+          borderRadius: 3,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h4">Responsive Layout</Typography>
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          You are viewing this on: <strong>{getDevice()}</strong>
+        </Typography>
+      </Box>
+    </>
   );
 };
 

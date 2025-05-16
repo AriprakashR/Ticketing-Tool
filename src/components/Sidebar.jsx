@@ -93,7 +93,6 @@ const Sidebar = () => {
             top: 16,
             left: 16,
             zIndex: 1301,
-            color: "white",
           }}
         >
           <ClearAllRoundedIcon />
