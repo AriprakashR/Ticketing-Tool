@@ -10,15 +10,20 @@ import {
   useTheme,
   useMediaQuery,
   ListItemButton,
+  ListItemIcon,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import ClearAllRoundedIcon from "@mui/icons-material/ClearAllRounded";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import SettingsIcon from "@mui/icons-material/Settings";
+import PeopleIcon from "@mui/icons-material/People";
+import BarChartIcon from "@mui/icons-material/BarChart";
 
 export const drawerWidth = 240;
 
 const Sidebar = () => {
   const theme = useTheme();
   const isMonitor = useMediaQuery(theme.breakpoints.up("lg"));
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -30,12 +35,50 @@ const Sidebar = () => {
     <Box>
       <Toolbar />
       <List>
-        <ListItemButton>
-          <ListItemText primary="Dashboard" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemText primary="Form Page" />
-        </ListItemButton>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText primary="Form Page" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <BarChartIcon />
+            </ListItemIcon>
+            <ListItemText primary="Analytics" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Users" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Settings" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -53,7 +96,7 @@ const Sidebar = () => {
             color: "white",
           }}
         >
-          <MenuIcon />
+          <ClearAllRoundedIcon />
         </IconButton>
       )}
       <Drawer

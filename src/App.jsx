@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ThemeProvider,
   CssBaseline,
   Button,
   TextField,
   Card,
-  Toolbar,
   Box,
 } from "@mui/material";
 import { lightTheme, darkTheme } from "./theme";
@@ -13,17 +12,42 @@ import Header from "./components/Header";
 import ResponsiveBox from "./components/ResponsiveBox";
 import Sidebar from "./components/Sidebar";
 import { drawerWidth } from "./components/Sidebar";
+const getSystemPreference = () =>
+  window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem("theme-mode");
+    if (savedMode === "dark") return true;
+    if (savedMode === "light") return false;
+    return getSystemPreference(); // fallback to system
+  });
+
+  // Save user's choice on toggle
+  const toggleDarkMode = () => {
+    setIsDarkMode((prev) => {
+      const newMode = !prev;
+      localStorage.setItem("theme-mode", newMode ? "dark" : "light");
+      return newMode;
+    });
+  };
+
+  // Listen for system theme change (only if user hasn't overridden)
+  useEffect(() => {
+    const savedMode = localStorage.getItem("theme-mode");
+    if (savedMode) return; // user has manually selected a mode
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (event) => setIsDarkMode(event.matches);
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
 
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <CssBaseline />
-      <Header
-        isDarkMode={isDarkMode}
-        toggleDarkMode={() => setIsDarkMode(!isDarkMode)}
-      />
+      <Header isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
       <Sidebar />
       <Box
         component="main"
