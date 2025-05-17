@@ -9,19 +9,23 @@ import {
 } from "@mui/material";
 import { lightTheme, darkTheme } from "./theme";
 import Header from "./components/Header";
+import Sidebar, { drawerWidth, collapsedWidth } from "./components/Sidebar";
 import ResponsiveBox from "./components/ResponsiveBox";
-import Sidebar from "./components/Sidebar";
-import { drawerWidth } from "./components/Sidebar";
+
 const getSystemPreference = () =>
   window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem("theme-mode");
-    if (savedMode === "dark") return true;
-    if (savedMode === "light") return false;
-    return getSystemPreference(); // fallback to system
+    const saved = localStorage.getItem("theme-mode");
+    return saved === "dark"
+      ? true
+      : saved === "light"
+      ? false
+      : getSystemPreference(); // fallback to system
   });
+
+  const [collapsed, setCollapsed] = useState(true);
 
   // Save user's choice on toggle
   const toggleDarkMode = () => {
@@ -47,15 +51,25 @@ function App() {
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <CssBaseline />
-      <Header isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-      <Sidebar />
+      <Header
+        isDarkMode={isDarkMode}
+        toggleDarkMode={toggleDarkMode}
+        collapsed={collapsed}
+      />
+      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       <Box
         component="main"
         sx={{
           mt: 8,
           p: 2,
-          ml: { lg: `${drawerWidth}px` }, // push content right on monitor
-          transition: "margin 0.3s",
+          ml: {
+            lg: `${collapsed ? collapsedWidth : drawerWidth}px`,
+          }, // push content right on monitor
+          transition: (theme) =>
+            theme.transitions.create("margin", {
+              easing: theme.transitions.easing.easeOut,
+              duration: theme.transitions.duration.complex,
+            }),
         }}
       >
         <ResponsiveBox />

@@ -61,8 +61,19 @@ export const darkTheme = createTheme({
       main: "#f48fb1",
     },
     background: {
-      default: "#121212",
-      paper: "#1e1e1e",
+      default: "#141a21",
+      paper: "#141a21",
+    },
+  },
+  components: {
+    ...baseSettings.components,
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#101a26",
+          borderRadius: 14,
+        },
+      },
     },
   },
 });
