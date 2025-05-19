@@ -1,4 +1,12 @@
-import { Box, Typography, useMediaQuery, useTheme, Card } from "@mui/material";
+import {
+  Box,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Card,
+  TextField,
+  Button,
+} from "@mui/material";
 
 const ResponsiveBox = () => {
   const theme = useTheme();
@@ -83,6 +91,15 @@ const ResponsiveBox = () => {
           You are viewing this on: <strong>{getDevice()}</strong>
         </Typography>
       </Box>
+      <Card style={{ padding: 20, margin: 20 }}>
+        <TextField
+          placeholder="Enter User Name"
+          hiddenLabel
+          size="small"
+          sx={{ marginRight: 2 }}
+        />
+        <Button variant="contained">Save button</Button>
+      </Card>
     </>
   );
 };
