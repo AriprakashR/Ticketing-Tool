@@ -1,5 +1,8 @@
-import Header from "../components/Header";
-import Sidebar, { drawerWidth, collapsedWidth } from "../components/Sidebar";
+import Header from "../components/Layouts/Header";
+import Sidebar, {
+  drawerWidth,
+  collapsedWidth,
+} from "../components/Layouts/Sidebar";
 import { Outlet } from "react-router";
 import { useState, useEffect } from "react";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
