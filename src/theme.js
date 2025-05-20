@@ -5,7 +5,7 @@ const baseSettings = {
     borderRadius: 8,
   },
   typography: {
-    fontFamily: `'Roboto', 'Helvetica', 'Arial', sans-serif`,
+    fontFamily: `"Public Sans Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
     button: {
       textTransform: "none",
     },

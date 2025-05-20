@@ -39,7 +39,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   };
 
   const renderListItem = (IconComponent, label) => (
-    <ListItem sx={{ display: "block" }}>
+    <ListItem sx={{ display: "block", py: 0.25 }}>
       <ListItemButton
         sx={{
           minHeight: 48,
@@ -47,7 +47,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
           justifyContent: collapsed && isMonitor ? "center" : "flex-start",
           transition: "all 0.3s ease",
           borderRadius: 1.5,
-          mx: -0.5,
+          mx: collapsed ? -1.5 : 0,
           "&:hover": {
             backgroundColor: (theme) =>
               theme.palette.mode === "dark" ? "#1D242B" : "#F6F7F8",
@@ -65,16 +65,34 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
           <IconComponent />
         </ListItemIcon>
         {collapsed && isMonitor ? (
-          <Box component="span" sx={{ fontSize: 10, mt: 0.5 }}>
+          <Box
+            component="span"
+            sx={{
+              fontSize: 10,
+              fontWeight: 600,
+              lineHeight: "16px",
+              mt: 0.5,
+              whiteSpace: "nowrap",
+              textAlign: "center",
+              color: "#637381",
+            }}
+          >
             {label}
           </Box>
         ) : (
           <ListItemText
             primary={label}
+            primaryTypographyProps={{
+              fontWeight: 500,
+              fontSize: 14,
+              lineHeight: 1.57,
+            }}
             sx={{
               opacity: collapsed && isMonitor ? 0 : 1,
               transform: collapsed && isMonitor ? "translateX(-10px)" : "none",
               transition: "opacity 0.3s ease, transform 0.3s ease",
+              color: (theme) =>
+                theme.palette.mode === "dark" ? "#919EAB" : "#637381",
             }}
           />
         )}
@@ -87,10 +105,22 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       <Toolbar
         sx={{
           display: "flex",
-          justifyContent: collapsed && isMonitor ? "center" : "flex-end",
+          justifyContent: "space-between",
           px: 1,
         }}
       >
+        <Box
+          component="img"
+          src="/src/assets/ct-logo-bg-rmv.png"
+          alt="Company Logo"
+          sx={{
+            height: 40,
+            width: 50,
+            ml: -0.7,
+            mt: 3,
+            mb: 1.8,
+          }}
+        />
         {isMonitor && (
           <IconButton
             onClick={handleCollapseToggle}
@@ -127,10 +157,11 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
           </IconButton>
         )}
       </Toolbar>
-      <Divider />
+      {/* Logo goes here */}
+
       <List>
-        {renderListItem(DashboardTwoToneIcon, "Dashboard")}
-        {renderListItem(AssignmentTwoToneIcon, "Form Page")}
+        {renderListItem(DashboardTwoToneIcon, "App")}
+        {renderListItem(AssignmentTwoToneIcon, "Ecommerce")}
         {renderListItem(BarChartTwoToneIcon, "Reports")}
         {renderListItem(PeopleTwoToneIcon, "Users")}
         {renderListItem(SettingsTwoToneIcon, "Settings")}
