@@ -7,8 +7,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import LightModeTwoToneIcon from "@mui/icons-material/LightModeTwoTone";
-import DarkModeTwoToneIcon from "@mui/icons-material/DarkModeTwoTone";
+import { Icon } from "@iconify/react";
 import { drawerWidth, collapsedWidth } from "./Sidebar";
 
 const Header = ({ isDarkMode, toggleDarkMode, collapsed }) => {
@@ -35,11 +34,18 @@ const Header = ({ isDarkMode, toggleDarkMode, collapsed }) => {
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Typography variant="h6" sx={{ color: "text.primary", marginLeft: 4 }}>
+        <Typography
+          variant="h6"
+          sx={{ color: "text.primary", marginLeft: 4, marginBottom: 0.5 }}
+        >
           Cloute Technologies
         </Typography>
         <IconButton onClick={toggleDarkMode} sx={{ marginLeft: "auto" }}>
-          {isDarkMode ? <LightModeTwoToneIcon /> : <DarkModeTwoToneIcon />}
+          {isDarkMode ? (
+            <Icon icon="solar:sun-2-bold-duotone" color="#919EAB" />
+          ) : (
+            <Icon icon="solar:moon-stars-bold-duotone" color="#637381" />
+          )}
         </IconButton>
       </Toolbar>
     </AppBar>
