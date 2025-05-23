@@ -35,8 +35,12 @@ const Header = ({ isDarkMode, toggleDarkMode, collapsed }) => {
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Typography
-          variant="h6"
-          sx={{ color: "text.primary", marginLeft: 4, marginBottom: 0.5 }}
+          sx={{
+            color: "text.primary",
+            marginLeft: 4,
+            marginBottom: 0.5,
+            fontWeight: 600,
+          }}
         >
           Cloute Technologies
         </Typography>
