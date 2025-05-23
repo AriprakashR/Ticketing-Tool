@@ -1,5 +1,17 @@
 import { createTheme } from "@mui/material/styles";
 
+const lightShadows = [
+  "none", // elevation 0
+  "0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12)", // elevation 1
+  ...Array(23).fill("0px 4px 20px rgba(145, 158, 171, 0.12)"), // fallback for elevations 2–24
+];
+
+const darkShadows = [
+  "none", // elevation 0
+  "0 0 2px 0 rgba(0, 0, 0, 0.2), 0 12px 24px -4px rgba(0, 0, 0, 0.12)", // elevation 1
+  ...Array(23).fill("0px 4px 20px rgba(0, 0, 0, 0.12)"), // fallback for elevations 2–24
+];
+
 const baseSettings = {
   shape: {
     borderRadius: 8,
@@ -20,17 +32,52 @@ const baseSettings = {
       },
     },
     MuiTextField: {
+      defaultProps: {
+        variant: "outlined",
+        size: "small",
+      },
+    },
+    MuiOutlinedInput: {
       styleOverrides: {
         root: {
           borderRadius: 8,
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "black",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "black",
+          },
+        },
+        notchedOutline: {
+          borderColor: "#EDEFF1",
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: "#A3AEB8",
+          "&.Mui-focused": {
+            fontWeight: 600,
+            color: "black",
+          },
         },
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 14,
-          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+          borderRadius: 16,
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          backgroundColor: "#1C252E",
+          "&:hover": {
+            backgroundColor: "#454F5B",
+          },
         },
       },
     },
@@ -39,6 +86,7 @@ const baseSettings = {
 
 export const lightTheme = createTheme({
   ...baseSettings,
+  shadows: lightShadows,
   palette: {
     mode: "light",
     primary: {
@@ -52,6 +100,7 @@ export const lightTheme = createTheme({
 
 export const darkTheme = createTheme({
   ...baseSettings,
+  shadows: darkShadows,
   palette: {
     mode: "dark",
     primary: {
@@ -71,7 +120,41 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: "#101a26",
-          borderRadius: 14,
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          color: "#ffffff",
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#333E47",
+          },
+
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#ffff",
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: "#637381",
+          "&.Mui-focused": {
+            color: "#ffff",
+            fontWeight: 600,
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          backgroundColor: "#ffff",
+          "&:hover": {
+            backgroundColor: "#C4CDD5",
+          },
         },
       },
     },

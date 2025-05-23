@@ -46,42 +46,40 @@ const CompanyForm = () => {
           <Box component="form" onSubmit={handleSubmit} noValidate>
             <Grid container spacing={2} rowSpacing={2.5} columns={16}>
               {/* Row 1 */}
-              <Grid item size={8}>
+              <Grid size={8}>
                 <TextField
                   name="compName"
                   label="Company Name"
                   fullWidth
-                  required
                   value={formData.compName}
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item size={8}>
+              <Grid size={8}>
                 <TextField
                   name="ctcPersName"
-                  label="Contact Person Name"
+                  label="Contact Person"
                   fullWidth
-                  required
                   value={formData.ctcPersName}
                   onChange={handleChange}
                 />
               </Grid>
 
               {/* Row 2 */}
-              <Grid item size={8}>
+              <Grid size={8}>
                 <TextField
                   name="ctcPh"
-                  label="Contact Phone"
+                  label="Phone"
                   fullWidth
                   value={formData.ctcPh}
                   onChange={handleChange}
                   type="tel"
                 />
               </Grid>
-              <Grid item size={8}>
+              <Grid size={8}>
                 <TextField
                   name="compLandline"
-                  label="Company Landline"
+                  label="Landline"
                   fullWidth
                   value={formData.compLandline}
                   onChange={handleChange}
@@ -90,20 +88,20 @@ const CompanyForm = () => {
               </Grid>
 
               {/* Row 3 */}
-              <Grid item size={8}>
+              <Grid size={8}>
                 <TextField
                   name="ctcMail"
-                  label="Contact Email"
+                  label="Email"
                   fullWidth
                   value={formData.ctcMail}
                   onChange={handleChange}
                   type="email"
                 />
               </Grid>
-              <Grid item size={8}>
+              <Grid size={8}>
                 <TextField
                   name="compUrl"
-                  label="Company Website"
+                  label="URL"
                   fullWidth
                   value={formData.compUrl}
                   onChange={handleChange}
@@ -112,19 +110,19 @@ const CompanyForm = () => {
               </Grid>
 
               {/* Row 4 */}
-              <Grid item size={8}>
+              <Grid size={8}>
                 <TextField
                   name="gstNo"
-                  label="GST Number"
+                  label="GST "
                   fullWidth
                   value={formData.gstNo}
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item size={8}>
+              <Grid size={8}>
                 <TextField
                   name="panNo"
-                  label="PAN Number"
+                  label="PAN"
                   fullWidth
                   value={formData.panNo}
                   onChange={handleChange}
@@ -132,7 +130,7 @@ const CompanyForm = () => {
               </Grid>
 
               {/* Row 5 */}
-              <Grid item size={8}>
+              <Grid size={8}>
                 <Button variant="outlined" component="label" fullWidth>
                   Upload Company Logo
                   <input
@@ -149,7 +147,7 @@ const CompanyForm = () => {
                   </Typography>
                 )}
               </Grid>
-              <Grid item size={8}>
+              <Grid size={8}>
                 <Button variant="outlined" component="label" fullWidth>
                   Upload Signature / Stamp
                   <input
@@ -168,7 +166,7 @@ const CompanyForm = () => {
               </Grid>
 
               {/* Row 6: Submit Button - span both columns */}
-              <Grid item size={4}>
+              <Grid size={4}>
                 <Button variant="contained" type="submit" fullWidth>
                   Submit
                 </Button>
