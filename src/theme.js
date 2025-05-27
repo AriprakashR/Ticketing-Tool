@@ -1,3 +1,4 @@
+import { Margin } from "@mui/icons-material";
 import { createTheme } from "@mui/material/styles";
 
 const lightShadows = [
@@ -34,7 +35,6 @@ const baseSettings = {
     MuiTextField: {
       defaultProps: {
         variant: "outlined",
-        size: "small",
       },
     },
     MuiOutlinedInput: {

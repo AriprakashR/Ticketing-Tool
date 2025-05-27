@@ -38,15 +38,15 @@ const CompanyForm = () => {
 
   return (
     <>
-      <Card sx={{ maxWidth: 700, mx: "auto", mt: 4, padding: 2 }}>
+      <Card sx={{ maxWidth: 1000, mx: "auto", mt: 4, padding: 2 }}>
         <CardContent>
           <Typography variant="h6" mb={4}>
             Company Form
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate>
-            <Grid container spacing={2} rowSpacing={2.5} columns={16}>
-              {/* Row 1 */}
-              <Grid size={8}>
+            <Grid container spacing={2} rowSpacing={2.5}>
+              {/* Responsive fields */}
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="compName"
                   label="Company Name"
@@ -55,7 +55,7 @@ const CompanyForm = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid size={8}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="ctcPersName"
                   label="Contact Person"
@@ -64,9 +64,7 @@ const CompanyForm = () => {
                   onChange={handleChange}
                 />
               </Grid>
-
-              {/* Row 2 */}
-              <Grid size={8}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="ctcPh"
                   label="Phone"
@@ -76,7 +74,7 @@ const CompanyForm = () => {
                   type="tel"
                 />
               </Grid>
-              <Grid size={8}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="compLandline"
                   label="Landline"
@@ -86,9 +84,7 @@ const CompanyForm = () => {
                   type="tel"
                 />
               </Grid>
-
-              {/* Row 3 */}
-              <Grid size={8}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="ctcMail"
                   label="Email"
@@ -98,7 +94,7 @@ const CompanyForm = () => {
                   type="email"
                 />
               </Grid>
-              <Grid size={8}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="compUrl"
                   label="URL"
@@ -108,18 +104,16 @@ const CompanyForm = () => {
                   type="url"
                 />
               </Grid>
-
-              {/* Row 4 */}
-              <Grid size={8}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="gstNo"
-                  label="GST "
+                  label="GST"
                   fullWidth
                   value={formData.gstNo}
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid size={8}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="panNo"
                   label="PAN"
@@ -128,9 +122,7 @@ const CompanyForm = () => {
                   onChange={handleChange}
                 />
               </Grid>
-
-              {/* Row 5 */}
-              <Grid size={8}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Button variant="outlined" component="label" fullWidth>
                   Upload Company Logo
                   <input
@@ -147,7 +139,7 @@ const CompanyForm = () => {
                   </Typography>
                 )}
               </Grid>
-              <Grid size={8}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Button variant="outlined" component="label" fullWidth>
                   Upload Signature / Stamp
                   <input
@@ -165,9 +157,14 @@ const CompanyForm = () => {
                 )}
               </Grid>
 
-              {/* Row 6: Submit Button - span both columns */}
-              <Grid size={4}>
-                <Button variant="contained" type="submit" fullWidth>
+              {/* Submit Button - Full width on xs, aligned to end on larger screens */}
+              <Grid
+                size={12}
+                display="flex"
+                justifyContent={{ xs: "center", sm: "flex-end" }}
+                mt={2}
+              >
+                <Button variant="contained" type="submit">
                   Submit
                 </Button>
               </Grid>
