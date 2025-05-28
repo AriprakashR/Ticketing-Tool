@@ -25,6 +25,7 @@ const EmployeeForm = () => {
     city: "",
     state: "",
     empEmail: "",
+    locId: "",
   });
 
   const handleChange = (e) => {
@@ -37,12 +38,21 @@ const EmployeeForm = () => {
     console.log("Submitted:", formData);
   };
 
-  // Sample data for Employee DEsignation
+  // Sample data for Employee Designation & Location
   const designationOptions = [
     { id: "Emp1001", name: "Regional Manager" },
     { id: "Emp1002", name: "Branch Manager" },
-    { id: "Emp1003", name: "Admin" },
-    { id: "Emp1004", name: "Service Engineer" },
+    { id: "Emp1003", name: "Service Engineer" },
+    { id: "Emp1004", name: "Admin" },
+  ];
+
+  const locationOptions = [
+    { id: "1", name: "North Banglore" },
+    { id: "2", name: "South Banglore" },
+    { id: "3", name: "East Banglore" },
+    { id: "4", name: "West Banglore" },
+    { id: "5", name: "Central Banglore" },
+    { id: "6", name: "Head Office" },
   ];
 
   return (
@@ -97,6 +107,25 @@ const EmployeeForm = () => {
                   {designationOptions.map((desgn) => (
                     <MenuItem key={desgn.id} value={desgn.id}>
                       {desgn.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <FormControl fullWidth>
+                <InputLabel id="location-select-label">Location</InputLabel>
+                <Select
+                  labelId="location-select-label"
+                  name="locId"
+                  label="Select Location"
+                  fullWidth
+                  value={formData.locId}
+                  onChange={handleChange}
+                >
+                  {locationOptions.map((loc) => (
+                    <MenuItem key={loc.id} value={loc.id}>
+                      {loc.name}
                     </MenuItem>
                   ))}
                 </Select>

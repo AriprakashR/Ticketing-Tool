@@ -61,7 +61,7 @@ const MachineForm = () => {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 4 }}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <FormControl fullWidth>
                 <InputLabel id="customer-select-label">Customer</InputLabel>
                 <Select
@@ -79,7 +79,7 @@ const MachineForm = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={{ xs: 12, sm: 4 }}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <FormControl fullWidth>
                 <InputLabel id="product-select-label">Product</InputLabel>
                 <Select
@@ -97,7 +97,7 @@ const MachineForm = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={{ xs: 12, sm: 4 }}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <TextField
                 name="mcnSno"
                 label="Serial No"
@@ -106,7 +106,7 @@ const MachineForm = () => {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid size={{ xs: 12, sm: 4 }}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <TextField
                 name="instlDate"
                 label="Installation Date"
@@ -136,6 +136,16 @@ const MachineForm = () => {
                 fullWidth
                 InputLabelProps={{ shrink: true }}
                 value={formData.wrntyStartDate}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <TextField
+                name="wrntyEndDate"
+                label="Warranty End Date"
+                type="datetime-local"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
                 onChange={handleChange}
               />
             </Grid>
