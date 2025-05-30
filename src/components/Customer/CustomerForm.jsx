@@ -14,6 +14,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useState } from "react";
+import { postCustomerDetails } from "../../api/customer-service";
 
 const CustomerForm = () => {
   const [formData, setFormData] = useState({
@@ -59,8 +60,20 @@ const CustomerForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const response = await postCustomerDetails(formData);
+      console.log("Response:", response);
+      if (response && response.data && response.data.status === "OK") {
+        alert(response?.data?.msg || "Customer details added successfully");
+      } else {
+        alert("Failed to submit customer details.");
+      }
+    } catch (error) {
+      console.error("Submission Error:", error);
+      alert("An error occurred while submitting the form.");
+    }
     console.log("Submitted:", formData);
   };
 
