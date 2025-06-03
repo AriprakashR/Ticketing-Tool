@@ -38,27 +38,130 @@ const CustomerForm = () => {
   });
   const { showToast } = useToast();
 
-  const handleChange = (e) => {
-    const { name, value, checked, type } = e.target;
+  const [isSameAsBilling, setIsSameAsBilling] = useState(false);
+  const [billingCityOptions, setBillingCityOptions] = useState(["Select City"]);
+  const [shippingCityOptions, setShippingCityOptions] = useState([
+    "Select City",
+  ]);
 
-    if (name === "sameAsBilling") {
-      const isChecked = checked;
-      setFormData((prev) => ({
-        ...prev,
-        sameAsBilling: isChecked,
-        ...(isChecked && {
-          cusSAdd1: prev.cusBAdd1,
-          cusSAdd2: prev.cusBAdd2,
-          cusSPcode: prev.cusBPcode,
-          cusSState: prev.cusBState,
-          cusSCity: prev.cusBCity,
-        }),
+  const fetchPincodeDetails = async (pincode, type) => {
+    try {
+      const response = await fetch(
+        `https://api.postalpincode.in/pincode/${pincode}`
+      );
+      const data = await response.json();
+
+      console.log(data[0].PostOffice);
+
+      if (data && data[0].Status === "Success") {
+        const postOffices = data[0].PostOffice;
+        const cityList = postOffices.map((office) => office.Name);
+        const districtList = postOffices.map((office) => office.District);
+        const uniqueCities = [...new Set([...cityList, ...districtList])];
+
+        if (type === "billing") {
+          setBillingCityOptions(uniqueCities);
+          setFormData((prev) => ({
+            ...prev,
+            cusBState: postOffices[0].State,
+            cusBCity: postOffices[0].District,
+          }));
+        } else {
+          setShippingCityOptions(uniqueCities);
+          setFormData((prev) => ({
+            ...prev,
+            cusSState: postOffices[0].State,
+            cusSCity: postOffices[0].District,
+          }));
+        }
+      } else {
+        showToast("Invalid Pincode. Please enter a valid one.");
+        if (type === "billing") {
+          setBillingCityOptions(["Select City"]);
+          setFormData((prev) => ({
+            ...prev,
+            cusBState: "",
+            cusBCity: "",
+          }));
+        } else {
+          setShippingCityOptions(["Select City"]);
+          setFormData((prev) => ({
+            ...prev,
+            cusSState: "",
+            cusSCity: "",
+          }));
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching pincode details:", error);
+      showToast("Failed to fetch pincode details.");
+      if (type === "billing") {
+        setBillingCityOptions(["Select City"]);
+      } else {
+        setShippingCityOptions(["Select City"]);
+      }
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "cusBPcode" && value.length === 6) {
+      fetchPincodeDetails(value, "billing");
+    }
+    if (name === "cusSPcode" && value.length === 6) {
+      fetchPincodeDetails(value, "shipping");
+    }
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    if (isSameAsBilling && name.startsWith("cusB")) {
+      const shippingField = name.replace("cusB", "cusS");
+      setFormData((prevData) => ({
+        ...prevData,
+        [shippingField]: value,
       }));
+    }
+  };
+
+  const handleCheckbox = (e) => {
+    const checked = e.target.checked;
+    setIsSameAsBilling(checked);
+
+    if (checked) {
+      setFormData((prevData) => ({
+        ...prevData,
+        cusSAdd1: prevData.cusBAdd1,
+        cusSAdd2: prevData.cusBAdd2,
+        cusSPcode: prevData.cusBPcode,
+        cusSState: prevData.cusBState,
+        cusSCity: prevData.cusBCity,
+      }));
+      console.log(formData);
+      setShippingCityOptions(billingCityOptions);
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.cusSAdd1;
+        delete newErrors.cusSAdd2;
+        delete newErrors.cusSPcode;
+        delete newErrors.cusSState;
+        delete newErrors.cusSCity;
+        return newErrors;
+      });
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
+      setFormData((prevData) => ({
+        ...prevData,
+        cusSAdd1: "",
+        cusSAdd2: "",
+        cusSPcode: "",
+        cusSState: "",
+        cusSCity: "",
       }));
+      console.log(formData);
+      setShippingCityOptions(["Select City"]);
     }
   };
 
@@ -181,9 +284,12 @@ const CustomerForm = () => {
                   value={formData.cusBCity}
                   onChange={handleChange}
                 >
-                  <MenuItem value="1">Madurai</MenuItem>
-                  <MenuItem value="2">Chennai</MenuItem>
-                  <MenuItem value="3">Banglore</MenuItem>
+                  {billingCityOptions.length > 0 &&
+                    billingCityOptions?.map((city, index) => (
+                      <MenuItem key={index} value={city}>
+                        {city}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -192,8 +298,8 @@ const CustomerForm = () => {
                 control={
                   <Checkbox
                     name="sameAsBilling"
-                    checked={formData.sameAsBilling}
-                    onChange={handleChange}
+                    checked={isSameAsBilling}
+                    onChange={handleCheckbox}
                   />
                 }
                 label="Copy to Shipping Address"
@@ -211,7 +317,7 @@ const CustomerForm = () => {
                 fullWidth
                 value={formData.cusSAdd1}
                 onChange={handleChange}
-                disabled={formData.sameAsBilling}
+                disabled={isSameAsBilling}
               />
             </Grid>
             <Grid size={{ xs: 12 }}>
@@ -221,7 +327,7 @@ const CustomerForm = () => {
                 fullWidth
                 value={formData.cusSAdd2}
                 onChange={handleChange}
-                disabled={formData.sameAsBilling}
+                disabled={isSameAsBilling}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
@@ -231,7 +337,7 @@ const CustomerForm = () => {
                 fullWidth
                 value={formData.cusSPcode}
                 onChange={handleChange}
-                disabled={formData.sameAsBilling}
+                disabled={isSameAsBilling}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
@@ -241,7 +347,7 @@ const CustomerForm = () => {
                 fullWidth
                 value={formData.cusSState}
                 onChange={handleChange}
-                disabled={formData.sameAsBilling}
+                disabled={isSameAsBilling}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
@@ -253,10 +359,14 @@ const CustomerForm = () => {
                   label="City"
                   value={formData.cusSCity}
                   onChange={handleChange}
+                  disabled={isSameAsBilling}
                 >
-                  <MenuItem value="1">Madurai</MenuItem>
-                  <MenuItem value="2">Chennai</MenuItem>
-                  <MenuItem value="3">Banglore</MenuItem>
+                  {shippingCityOptions.length > 0 &&
+                    shippingCityOptions?.map((city, index) => (
+                      <MenuItem key={index} value={city}>
+                        {city}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Grid>
