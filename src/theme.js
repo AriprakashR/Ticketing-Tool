@@ -82,6 +82,49 @@ const baseSettings = {
       },
     },
   },
+  MuiSnackbar: {
+    styleOverrides: {
+      root: {
+        top: 80, // offset from top (adjust as needed)
+        borderRadius: 12,
+        boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
+        padding: "0 12px",
+      },
+    },
+  },
+  MuiAlert: {
+    styleOverrides: {
+      outlined: {
+        fontWeight: 600,
+        backgroundColor: "#fff",
+        borderColor: "#E0E0E0",
+        color: "#1C252E",
+        "& .MuiAlert-icon": {
+          color: "#1976d2", // match primary or custom icon color
+        },
+      },
+      outlinedSuccess: {
+        borderColor: "#caefd8",
+        color: "#118d57",
+        backgroundColor: "#eaf6ef",
+      },
+      outlinedError: {
+        borderColor: "#ef9a9a",
+        color: "#b71d18",
+        backgroundColor: "#fbeeec",
+      },
+      outlinedWarning: {
+        borderColor: "#fce8c3",
+        color: "#b76e00",
+        backgroundColor: "#fbf4e8",
+      },
+      outlinedInfo: {
+        borderColor: "#c2ecf4",
+        color: "#006ca8",
+        backgroundColor: "#e7f5f9",
+      },
+    },
+  },
 };
 
 export const lightTheme = createTheme({
