@@ -1,5 +1,7 @@
 import RootLayout from "../layouts/RootLayout";
+import PublicLayout from "../layouts/PublicLayout";
 import PrivateLayout from "../layouts/PrivateLayout";
+import LoginForm from "../components/Auth/LoginForm";
 import ResponsiveBox from "../components/Layouts/ResponsiveBox";
 import CompanyForm from "../components/Company/CompanyForm";
 import BankForm from "../components/Company/BankForm";
@@ -7,7 +9,6 @@ import CustomerForm from "../components/Customer/CustomerForm";
 import EmployeeForm from "../components/Employee/EmployeeForm";
 import ProductForm from "../components/Product/ProductForm";
 import MachineForm from "../components/Machine/MachineForm";
-import LoginForm from "../components/Auth/LoginForm";
 
 export const routes = [
   {
@@ -16,10 +17,14 @@ export const routes = [
     children: [
       {
         path: "/",
+        element: <PublicLayout />,
+        children: [{ path: "/", element: <LoginForm /> }],
+      },
+      {
+        path: "/",
         element: <PrivateLayout />,
         children: [
           { path: "/", element: <ResponsiveBox /> },
-          { path: "/login", element: <LoginForm /> },
           { path: "/company/add", element: <CompanyForm /> },
           { path: "/bank/add", element: <BankForm /> },
           { path: "/customer/add", element: <CustomerForm /> },
