@@ -24,7 +24,7 @@ export const routes = [
         path: "/",
         element: <PrivateLayout />,
         children: [
-          { path: "/", element: <ResponsiveBox /> },
+          { path: "/dashboard", element: <ResponsiveBox /> },
           { path: "/company/add", element: <CompanyForm /> },
           { path: "/bank/add", element: <BankForm /> },
           { path: "/customer/add", element: <CustomerForm /> },

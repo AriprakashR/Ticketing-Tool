@@ -92,6 +92,7 @@ const Toast = ({
         variant="outlined"
         sx={{
           width: "100%",
+          borderRadius: 2,
           bgcolor: bg,
           color: color,
           borderColor: border,

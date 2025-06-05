@@ -1,9 +1,13 @@
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { Box, Button, TextField, Typography, Paper } from "@mui/material";
+import { useNavigate } from "react-router";
+import { useToast } from "../../context/ToastContext";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
-    email: "",
+    userId: "",
     password: "",
   });
 
@@ -17,7 +21,21 @@ const LoginForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Login data:", formData);
-    // Add your authentication logic here
+
+    const validCredentials = {
+      userId: "EMP001",
+      password: "Admin@123",
+    };
+
+    if (
+      formData.userId === validCredentials.userId &&
+      formData.password === validCredentials.password
+    ) {
+      showToast("Successfully logged in", "success");
+      navigate("/dashboard");
+    } else {
+      showToast("Incorrect User ID or Password", "error");
+    }
   };
 
   return (
@@ -34,11 +52,10 @@ const LoginForm = () => {
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
-            label="Email"
-            name="email"
-            type="email"
+            label="User ID"
+            name="userId"
             margin="normal"
-            value={formData.email}
+            value={formData.userId}
             onChange={handleChange}
           />
           <TextField

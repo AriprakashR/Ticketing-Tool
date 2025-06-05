@@ -37,7 +37,6 @@ const CustomerForm = () => {
     sameAsBilling: false,
   });
   const { showToast } = useToast();
-
   const [isSameAsBilling, setIsSameAsBilling] = useState(false);
   const [billingCityOptions, setBillingCityOptions] = useState(["Select City"]);
   const [shippingCityOptions, setShippingCityOptions] = useState([
