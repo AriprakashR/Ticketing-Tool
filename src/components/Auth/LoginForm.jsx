@@ -2,6 +2,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useToast } from "../../context/ToastContext";
+import { postEmployeeLogin } from "../../api/auth-service";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -18,23 +19,25 @@ const LoginForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login data:", formData);
+    try {
+      const data = {
+        userId: formData.userId,
+        password: formData.password,
+      };
 
-    const validCredentials = {
-      userId: "EMP001",
-      password: "Admin@123",
-    };
+      const response = await postEmployeeLogin(data);
 
-    if (
-      formData.userId === validCredentials.userId &&
-      formData.password === validCredentials.password
-    ) {
-      showToast("Successfully logged in", "success");
-      navigate("/dashboard");
-    } else {
-      showToast("Incorrect User ID or Password", "error");
+      if (response?.token) {
+        document.cookie = `token1=${encodeURIComponent(response.token)}`;
+        showToast("Successfully logged in", "success");
+        navigate("/dashboard");
+      } else {
+        showToast("Login failed: Token not received", "error");
+      }
+    } catch (error) {
+      showToast(error, "error");
     }
   };
 
