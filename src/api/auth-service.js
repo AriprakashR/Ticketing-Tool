@@ -1,14 +1,11 @@
-import { instance } from "./api";
-import { useToast } from "../context/ToastContext";
-
-const { showToast } = useToast();
+import instance from "./api";
 
 export const postEmployeeLogin = async (data) => {
-  const newInstance = instance();
   try {
-    const response = await newInstance.post("employee/login", data);
+    const response = await instance.post("employee/login", data);
+    console.log("Login response:", response);
     return response.data;
   } catch (error) {
-    showToast(error.response?.data?.msg || "Failed to Login");
+    alert(error.response?.data?.msg || "Failed to Login");
   }
 };

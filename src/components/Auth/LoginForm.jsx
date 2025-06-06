@@ -8,7 +8,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [formData, setFormData] = useState({
-    userId: "",
+    username: "",
     password: "",
   });
 
@@ -23,14 +23,16 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const data = {
-        userId: formData.userId,
+        username: formData.username,
         password: formData.password,
       };
 
       const response = await postEmployeeLogin(data);
 
-      if (response?.token) {
-        document.cookie = `token1=${encodeURIComponent(response.token)}`;
+      if (response?.access_token) {
+        document.cookie = `token1=${encodeURIComponent(
+          response.access_token
+        )}; path=/;`;
         showToast("Successfully logged in", "success");
         navigate("/dashboard");
       } else {
@@ -56,9 +58,9 @@ const LoginForm = () => {
           <TextField
             fullWidth
             label="User ID"
-            name="userId"
+            name="username"
             margin="normal"
-            value={formData.userId}
+            value={formData.username}
             onChange={handleChange}
           />
           <TextField

@@ -17,10 +17,16 @@ export function handleApiError(error) {
 }
 // To delete a specific cookie by name, call the function with the cookie name
 
-export const instance = () => {
-  return axios.create({
-    baseURL: import.meta.env.VITE_APP_BASE_API_URL,
-    headers: { Authorization: `Bearer ${getCookieByName("token1")}` },
-    // mode: "no cors"
-  });
-};
+const instance = axios.create({
+  baseURL: import.meta.env.VITE_APP_BASE_API_URL,
+});
+
+instance.interceptors.request.use((config) => {
+  const token = getCookieByName("token1");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export default instance;
