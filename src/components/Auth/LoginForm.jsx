@@ -1,12 +1,11 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useToast } from "../../context/ToastContext";
 import { postEmployeeLogin } from "../../api/auth-service";
+import { toast } from "../../utils/toastService";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -22,24 +21,18 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = {
-        username: formData.username,
-        password: formData.password,
-      };
-
-      const response = await postEmployeeLogin(data);
-
+      const response = await postEmployeeLogin(formData);
       if (response?.access_token) {
         document.cookie = `token1=${encodeURIComponent(
           response.access_token
         )}; path=/;`;
-        showToast("Successfully logged in", "success");
+        toast.success("Login successful");
         navigate("/dashboard");
       } else {
-        showToast("Login failed: Token not received", "error");
+        toast.error("Login failed");
       }
     } catch (error) {
-      showToast(error, "error");
+      toast.error(error);
     }
   };
 

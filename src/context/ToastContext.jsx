@@ -1,5 +1,12 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import Toast from "../components/UI/Toast";
+import { setToastFunction } from "../utils/toastService";
 
 const ToastContext = createContext();
 
@@ -13,6 +20,10 @@ export const ToastProvider = ({ children }) => {
   const showToast = useCallback((message, severity = "success") => {
     setToast({ open: true, message, severity });
   }, []);
+
+  useEffect(() => {
+    setToastFunction(showToast);
+  }, [showToast]);
 
   const handleClose = () => {
     setToast((prev) => ({ ...prev, open: false }));

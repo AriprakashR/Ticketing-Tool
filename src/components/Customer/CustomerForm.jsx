@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { postCustomerDetails } from "../../api/customer-service";
-import { useToast } from "../../context/ToastContext";
+import { toast } from "../../utils/toastService";
 
 const CustomerForm = () => {
   const [formData, setFormData] = useState({
@@ -35,7 +35,6 @@ const CustomerForm = () => {
     cusSState: "",
     cusSCity: "",
   });
-  const { showToast } = useToast();
   const [isSameAsBilling, setIsSameAsBilling] = useState(false);
   const [billingCityOptions, setBillingCityOptions] = useState(["Select City"]);
   const [shippingCityOptions, setShippingCityOptions] = useState([
@@ -158,14 +157,14 @@ const CustomerForm = () => {
     try {
       const response = await postCustomerDetails(formData);
       if (response?.status === "OK") {
-        showToast("Customer details added successfully", "success");
+        toast.success("Customer details added successfully");
         console.log("Customer Details Submission Response:", response.msg);
       } else {
-        console.log("Submit failed response:", response);
+        console.log("Customer Details Submission failed");
       }
     } catch (error) {
       console.log("Submission Error:", error);
-      showToast("An error occurred while submitting the form.", "error");
+      toast.error("An error occurred while submitting the form.", "error");
     }
   };
 
