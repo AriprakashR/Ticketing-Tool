@@ -1,13 +1,9 @@
-import { instance } from "../api/api";
+import instance from "./api";
 
 export const postCustomerDetails = async (data) => {
-  const newInstance = instance();
   try {
-    const response = await newInstance.post(
-      `customer/createNewCustomer?compId=1`,
-      data
-    );
-    return response;
+    const response = await instance.post(`/customer/createNewCustomer`, data);
+    return response.data;
   } catch (error) {
     console.log(error.response?.data?.msg);
   }

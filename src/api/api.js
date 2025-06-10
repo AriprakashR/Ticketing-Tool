@@ -8,6 +8,7 @@ export function getCookieByName(cookiename) {
     cookiestring ? cookiestring?.toString().replace(/^[^=]+./, "") : ""
   );
 }
+
 export const deleteCookie = (name) => {
   document.cookie = name + "=";
 };

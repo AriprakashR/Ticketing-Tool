@@ -1,5 +1,5 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useToast } from "../../context/ToastContext";
 import { postEmployeeLogin } from "../../api/auth-service";
@@ -42,6 +42,10 @@ const LoginForm = () => {
       showToast(error, "error");
     }
   };
+
+  useEffect(() => {
+    document.cookie = "token1=";
+  }, []);
 
   return (
     <Box

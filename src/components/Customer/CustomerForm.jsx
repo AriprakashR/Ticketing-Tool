@@ -34,7 +34,6 @@ const CustomerForm = () => {
     cusSPcode: "",
     cusSState: "",
     cusSCity: "",
-    sameAsBilling: false,
   });
   const { showToast } = useToast();
   const [isSameAsBilling, setIsSameAsBilling] = useState(false);
@@ -139,17 +138,8 @@ const CustomerForm = () => {
         cusSState: prevData.cusBState,
         cusSCity: prevData.cusBCity,
       }));
-      console.log(formData);
+
       setShippingCityOptions(billingCityOptions);
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors.cusSAdd1;
-        delete newErrors.cusSAdd2;
-        delete newErrors.cusSPcode;
-        delete newErrors.cusSState;
-        delete newErrors.cusSCity;
-        return newErrors;
-      });
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -159,7 +149,6 @@ const CustomerForm = () => {
         cusSState: "",
         cusSCity: "",
       }));
-      console.log(formData);
       setShippingCityOptions(["Select City"]);
     }
   };
@@ -168,14 +157,14 @@ const CustomerForm = () => {
     e.preventDefault();
     try {
       const response = await postCustomerDetails(formData);
-      console.log("Response:", response);
-      if (response?.data?.status === "OK") {
+      if (response?.status === "OK") {
         showToast("Customer details added successfully", "success");
+        console.log("Customer Details Submission Response:", response.msg);
       } else {
-        showToast("Failed to submit customer details.", "error");
+        console.log("Submit failed response:", response);
       }
     } catch (error) {
-      console.error("Submission Error:", error);
+      console.log("Submission Error:", error);
       showToast("An error occurred while submitting the form.", "error");
     }
   };
