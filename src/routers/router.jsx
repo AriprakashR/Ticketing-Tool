@@ -5,11 +5,12 @@ import LoginForm from "../components/Auth/LoginForm";
 import ResponsiveBox from "../components/Layouts/ResponsiveBox";
 import CompanyForm from "../components/Company/CompanyForm";
 import BankForm from "../components/Company/BankForm";
+import Customers from "../pages/Customers";
 import CustomerForm from "../components/Customer/CustomerForm";
 import EmployeeForm from "../components/Employee/EmployeeForm";
+import Products from "../pages/Products";
 import ProductForm from "../components/Product/ProductForm";
 import MachineForm from "../components/Machine/MachineForm";
-import Customers from "../page/Customers";
 
 export const routes = [
   {
@@ -26,11 +27,12 @@ export const routes = [
         element: <PrivateLayout />,
         children: [
           { path: "/dashboard", element: <ResponsiveBox /> },
-          { path: "/customers", element: <Customers /> },
           { path: "/company/add", element: <CompanyForm /> },
           { path: "/bank/add", element: <BankForm /> },
+          { path: "/customers", element: <Customers /> },
           { path: "/customers/add", element: <CustomerForm /> },
           { path: "/employee/add", element: <EmployeeForm /> },
+          { path: "/products", element: <Products /> },
           { path: "/products/add", element: <ProductForm /> },
           { path: "/machine/add", element: <MachineForm /> },
         ],

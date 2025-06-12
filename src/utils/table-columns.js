@@ -32,3 +32,31 @@ export const customerTableColumns = [
     width: 200,
   },
 ];
+
+export const productTableColumns = [
+  {
+    field: "prdId",
+    headerName: "ID",
+    sortable: true,
+    width: 100,
+  },
+  {
+    field: "prdCode",
+    headerName: "Product Code",
+    sortable: true,
+    width: 150,
+  },
+  {
+    field: "prdName",
+    headerName: "Product Name",
+    sortable: true,
+    width: 200,
+  },
+
+  {
+    field: "prdDescription",
+    headerName: "Description",
+    sortable: false,
+    width: 850,
+  },
+];

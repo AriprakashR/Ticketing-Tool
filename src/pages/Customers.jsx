@@ -1,7 +1,7 @@
 import CustomerTable from "../components/Customer/CustomerTable";
 
-function Customers() {
+const Customers = () => {
   return <CustomerTable />;
-}
+};
 
 export default Customers;

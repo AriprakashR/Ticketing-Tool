@@ -5,10 +5,10 @@ import { Box, Typography, Button, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { Icon } from "@iconify/react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { getCustomerDetailsList } from "../../api/customer-service";
-import { customerTableColumns } from "../../utils/table-columns";
+import { getProductDetailsList } from "../../api/product-service";
+import { productTableColumns } from "../../utils/table-columns";
 
-export default function CustomerTable() {
+export default function ProductTable() {
   const theme = useTheme();
   const navigate = useNavigate();
   const [tableData, setTableData] = useState([]);
@@ -17,10 +17,10 @@ export default function CustomerTable() {
 
   const getTableData = async () => {
     try {
-      const response = await getCustomerDetailsList();
+      const response = await getProductDetailsList();
       setTableData(response.data.data);
     } catch (error) {
-      console.error("Error fetching customers:", error);
+      console.error("Error fetching Products:", error);
     }
   };
 
@@ -29,7 +29,7 @@ export default function CustomerTable() {
   }, []);
 
   const columns = [
-    ...customerTableColumns,
+    ...productTableColumns,
     {
       field: "action",
       headerName: "Action",
@@ -46,20 +46,20 @@ export default function CustomerTable() {
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="h5">CUSTOMERS</Typography>
+        <Typography variant="h5">PRODUCTS</Typography>
         <Button
           variant="contained"
           startIcon={<Icon icon={"mingcute:add-line"} />}
-          onClick={() => navigate("/customer/add")}
+          onClick={() => navigate("/Products/add")}
         >
-          New Customer
+          New Product
         </Button>
       </Box>
 
       <DataGrid
         rows={tableData}
         columns={columns}
-        getRowId={(row) => row.cusId}
+        getRowId={(row) => row.prdId}
         pagination
         paginationModel={{
           page: currentPage - 1,
@@ -71,7 +71,7 @@ export default function CustomerTable() {
         }}
         pageSizeOptions={[5, 10, 25, 50, 100]}
         localeText={{
-          noRowsLabel: "No Customers",
+          noRowsLabel: "No Products",
         }}
       />
     </Box>

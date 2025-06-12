@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { toast } from "../../utils/toastService";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import {
   postProductDetails,
   getGeneratedPrdCode,
@@ -22,6 +23,7 @@ const ProductForm = () => {
     prdBrand: "",
     prdDescription: "",
   });
+  const navigate = useNavigate();
 
   const fetchGeneratedPrdCode = async () => {
     try {
@@ -54,6 +56,7 @@ const ProductForm = () => {
       if (response?.status === "OK") {
         toast.success("Product details added successfully");
         console.log("Product Details Submission Response:", response.msg);
+        navigate(-1);
       } else {
         console.log("Product Details Submisson failed");
       }

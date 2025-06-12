@@ -22,3 +22,14 @@ export const getGeneratedPrdCode = async () => {
     toast.error(error.response?.data?.msg);
   }
 };
+
+export const getProductDetailsList = async () => {
+  try {
+    const response = await instance.get("product/getAllProducts");
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log(error.response?.data?.msg);
+    toast.error(error.response?.data?.msg);
+  }
+};
