@@ -7,7 +7,12 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-import { useState } from "react";
+import { toast } from "../../utils/toastService";
+import { useState, useEffect } from "react";
+import {
+  postProductDetails,
+  getGeneratedPrdCode,
+} from "../../api/product-service";
 
 const ProductForm = () => {
   const [formData, setFormData] = useState({
@@ -18,14 +23,47 @@ const ProductForm = () => {
     prdDescription: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const fetchGeneratedPrdCode = async () => {
+    try {
+      const response = await getGeneratedPrdCode();
+      if (response?.data) {
+        setFormData((prevData) => ({
+          ...prevData,
+          prdCode: response.data.prdCode,
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching generated Product Code:", error);
+      toast.error("Failed to fetch product code");
+    }
   };
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    fetchGeneratedPrdCode();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted:", formData);
+    try {
+      const response = await postProductDetails(formData);
+      if (response?.status === "OK") {
+        toast.success("Product details added successfully");
+        console.log("Product Details Submission Response:", response.msg);
+      } else {
+        console.log("Product Details Submisson failed");
+      }
+    } catch (error) {
+      console.log("Product Details Submission:", error);
+      toast.errortoast.error(
+        "An error occurred while submitting the product form.",
+        error
+      );
+    }
   };
 
   return (

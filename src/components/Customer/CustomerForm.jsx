@@ -14,10 +14,12 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { postCustomerDetails } from "../../api/customer-service";
 import { toast } from "../../utils/toastService";
 
 const CustomerForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     custName: "",
     ctcPersName: "",
@@ -159,12 +161,13 @@ const CustomerForm = () => {
       if (response?.status === "OK") {
         toast.success("Customer details added successfully");
         console.log("Customer Details Submission Response:", response.msg);
+        navigate(-1);
       } else {
         console.log("Customer Details Submission failed");
       }
     } catch (error) {
       console.log("Submission Error:", error);
-      toast.error("An error occurred while submitting the form.", "error");
+      toast.error("An error occurred while submitting the form.", error);
     }
   };
 
