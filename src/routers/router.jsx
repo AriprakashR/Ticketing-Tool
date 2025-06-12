@@ -9,6 +9,7 @@ import CustomerForm from "../components/Customer/CustomerForm";
 import EmployeeForm from "../components/Employee/EmployeeForm";
 import ProductForm from "../components/Product/ProductForm";
 import MachineForm from "../components/Machine/MachineForm";
+import Customers from "../page/Customers";
 
 export const routes = [
   {
@@ -25,6 +26,7 @@ export const routes = [
         element: <PrivateLayout />,
         children: [
           { path: "/dashboard", element: <ResponsiveBox /> },
+          { path: "/customer", element: <Customers /> },
           { path: "/company/add", element: <CompanyForm /> },
           { path: "/bank/add", element: <BankForm /> },
           { path: "/customer/add", element: <CustomerForm /> },
