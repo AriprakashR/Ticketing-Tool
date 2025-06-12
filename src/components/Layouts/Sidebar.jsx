@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Drawer,
   List,
@@ -15,6 +14,8 @@ import {
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Icon } from "@iconify/react";
+import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
 export const drawerWidth = 300;
 export const collapsedWidth = 88;
@@ -32,73 +33,117 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     setCollapsed(!collapsed);
   };
 
-  const renderListItem = (icon, label) => {
+  const SIDEBAR_LINKS = [
+    {
+      id: 1,
+      icon: "solar:widget-4-bold-duotone",
+      label: "Dashboard",
+      path: "/dashboard",
+    },
+    {
+      id: 2,
+      icon: "solar:users-group-rounded-bold-duotone",
+      label: "Customer",
+      path: "/customers",
+    },
+    {
+      id: 3,
+      icon: "solar:bag-smile-bold-duotone",
+      label: "Product",
+      path: "/products",
+    },
+    {
+      id: 4,
+      icon: "solar:chart-2-bold-duotone",
+      label: "Reports",
+      path: "/reports",
+    },
+
+    {
+      id: 5,
+      icon: "solar:settings-bold-duotone",
+      label: "Settings",
+      path: "/settings",
+    },
+  ];
+
+  const renderListItem = (id, icon, label, path) => {
     return (
       <ListItem sx={{ display: "block", py: 0.25 }}>
-        <ListItemButton
-          sx={{
-            minHeight: 48,
-            flexDirection: collapsed && isMonitor ? "column" : "row",
-            justifyContent: collapsed && isMonitor ? "center" : "flex-start",
-            transition: "all 0.3s ease",
-            borderRadius: 1.5,
-            mx: collapsed ? -1.5 : 0,
-            "&:hover": {
-              backgroundColor: (theme) =>
-                theme.palette.mode === "dark" ? "#1D242B" : "#F6F7F8",
-            },
-          }}
-        >
-          <ListItemIcon
-            sx={{
-              minWidth: "auto",
-              display: "flex",
-              mr: collapsed && isMonitor ? 0 : 1.5,
-              mb: collapsed && isMonitor ? 0.5 : 0,
-            }}
-          >
-            <Icon
-              icon={icon}
-              width={20}
-              height={20}
-              color={theme.palette.mode === "dark" ? "#919EAB" : "#637381"}
-            />
-          </ListItemIcon>
-          {collapsed && isMonitor ? (
-            <Box
-              component="span"
+        <NavLink to={path} style={{ textDecoration: "none", color: "inherit" }}>
+          {({ isActive }) => (
+            <ListItemButton
               sx={{
-                fontSize: 10,
-                fontWeight: 600,
-                lineHeight: "16px",
-                mt: 0.5,
-                whiteSpace: "nowrap",
-                textAlign: "center",
-                color: (theme) =>
-                  theme.palette.mode === "dark" ? "#919EAB" : "#637381",
+                minHeight: 48,
+                flexDirection: collapsed && isMonitor ? "column" : "row",
+                justifyContent:
+                  collapsed && isMonitor ? "center" : "flex-start",
+                transition: "all 0.3s ease",
+                borderRadius: 1.5,
+                mx: collapsed ? -1.5 : 0,
+                backgroundColor: isActive
+                  ? theme.palette.mode === "dark"
+                    ? "#1D242B"
+                    : "#F6F7F8"
+                  : "transparent",
+                "&:hover": {
+                  backgroundColor:
+                    theme.palette.mode === "dark" ? "#1D242B" : "#F6F7F8",
+                },
               }}
             >
-              {label}
-            </Box>
-          ) : (
-            <ListItemText
-              primary={label}
-              primaryTypographyProps={{
-                fontWeight: 500,
-                fontSize: 14,
-                lineHeight: 1.57,
-              }}
-              sx={{
-                opacity: collapsed && isMonitor ? 0 : 1,
-                transform:
-                  collapsed && isMonitor ? "translateX(-10px)" : "none",
-                transition: "opacity 0.3s ease, transform 0.3s ease",
-                color: (theme) =>
-                  theme.palette.mode === "dark" ? "#919EAB" : "#637381",
-              }}
-            />
+              <ListItemIcon
+                sx={{
+                  minWidth: "auto",
+                  display: "flex",
+                  mr: collapsed && isMonitor ? 0 : 1.5,
+                  mb: collapsed && isMonitor ? 0.5 : 0,
+                }}
+              >
+                <Icon
+                  icon={icon}
+                  width={20}
+                  height={20}
+                  color={theme.palette.mode === "dark" ? "#919EAB" : "#637381"}
+                />
+              </ListItemIcon>
+              {collapsed && isMonitor ? (
+                <Box
+                  component="span"
+                  sx={{
+                    fontSize: 10,
+                    fontWeight: 600,
+                    lineHeight: "16px",
+                    mt: 0.5,
+                    whiteSpace: "nowrap",
+                    textAlign: "center",
+                    color: (theme) =>
+                      theme.palette.mode === "dark" ? "#919EAB" : "#637381",
+                  }}
+                >
+                  {label}
+                </Box>
+              ) : (
+                <ListItemText
+                  primary={label}
+                  primaryTypographyProps={{
+                    fontWeight: 500,
+                    fontSize: 14,
+                    lineHeight: 1.57,
+                  }}
+                  sx={{
+                    opacity: collapsed && isMonitor ? 0 : 1,
+                    transform:
+                      collapsed && isMonitor ? "translateX(-10px)" : "none",
+                    transition: "opacity 0.3s ease, transform 0.3s ease",
+                    color: (theme) =>
+                      theme.palette.mode === "dark" ? "#919EAB" : "#637381",
+                  }}
+                />
+              )}
+            </ListItemButton>
           )}
-        </ListItemButton>
+        </NavLink>
       </ListItem>
     );
   };
@@ -163,11 +208,9 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       {/* Logo goes here */}
 
       <List>
-        {renderListItem("solar:widget-4-bold-duotone", "Dashboard")}
-        {renderListItem("solar:document-text-bold-duotone", "Form Page")}
-        {renderListItem("solar:chart-2-bold-duotone", "Reports")}
-        {renderListItem("solar:users-group-rounded-bold-duotone", "Users")}
-        {renderListItem("solar:settings-bold-duotone", "Settings")}
+        {SIDEBAR_LINKS.map(({ id, icon, label, path }) =>
+          renderListItem(id, icon, label, path)
+        )}
       </List>
     </Box>
   );
