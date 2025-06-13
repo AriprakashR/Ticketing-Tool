@@ -11,7 +11,9 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getCustomerDetailsList } from "../../api/customer-service";
+import { getProductDetailsList } from "../../api/product-service";
 
 const MachineForm = () => {
   const [formData, setFormData] = useState({
@@ -29,6 +31,34 @@ const MachineForm = () => {
     cusBillAddId: "",
     cusShipAddId: "",
   });
+  const [selectedCustomer, setSelectedCustomer] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState([]);
+
+  const fetchCustomerList = async () => {
+    try {
+      const response = await getCustomerDetailsList();
+      if (response?.data?.data) {
+        setSelectedCustomer(response.data?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchProductList = async () => {
+    try {
+      const response = await getProductDetailsList();
+      if (response?.data?.data) {
+        setSelectedProduct(response.data?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCustomerList();
+    fetchProductList();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,19 +69,6 @@ const MachineForm = () => {
     e.preventDefault();
     console.log("Submitted:", formData);
   };
-
-  // Sample data for Customer and Product
-  const customerOptions = [
-    { id: "C1001", name: "ABC Corp" },
-    { id: "C1002", name: "XYZ Ltd" },
-    { id: "C1003", name: "Test Company" },
-  ];
-
-  const productOptions = [
-    { id: "P2001", name: "Machine A" },
-    { id: "P2002", name: "Machine B" },
-    { id: "P2003", name: "Machine C" },
-  ];
 
   return (
     <Card sx={{ maxWidth: 1000, mx: "auto", mt: 4, padding: 2 }}>
@@ -71,9 +88,9 @@ const MachineForm = () => {
                   label="Customer"
                   onChange={handleChange}
                 >
-                  {customerOptions.map((cust) => (
-                    <MenuItem key={cust.id} value={cust.id}>
-                      {cust.name}
+                  {selectedCustomer?.map((customer) => (
+                    <MenuItem key={customer.cusId} value={customer.cusId}>
+                      {customer.custName}
                     </MenuItem>
                   ))}
                 </Select>
@@ -89,9 +106,9 @@ const MachineForm = () => {
                   label="Product"
                   onChange={handleChange}
                 >
-                  {productOptions.map((prod) => (
-                    <MenuItem key={prod.id} value={prod.id}>
-                      {prod.name}
+                  {selectedProduct?.map((product) => (
+                    <MenuItem key={product.prdId} value={product.prdId}>
+                      {product.prdName}
                     </MenuItem>
                   ))}
                 </Select>
