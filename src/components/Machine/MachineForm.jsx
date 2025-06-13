@@ -10,6 +10,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Autocomplete,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { getCustomerDetailsList } from "../../api/customer-service";
@@ -79,40 +80,48 @@ const MachineForm = () => {
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, sm: 3 }}>
-              <FormControl fullWidth>
-                <InputLabel id="customer-select-label">Customer</InputLabel>
-                <Select
-                  labelId="customer-select-label"
-                  name="custId"
-                  value={formData.custId}
-                  label="Customer"
-                  onChange={handleChange}
-                >
-                  {selectedCustomer?.map((customer) => (
-                    <MenuItem key={customer.cusId} value={customer.cusId}>
-                      {customer.custName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                fullWidth
+                options={selectedCustomer}
+                getOptionLabel={(option) => option.custName || ""}
+                onChange={(event, value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    custId: value ? value.cusId : "",
+                  }))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    labelId="customer-select-label"
+                    name="custId"
+                    label="Customer"
+                    variant="outlined"
+                  />
+                )}
+              />
             </Grid>
             <Grid size={{ xs: 12, sm: 3 }}>
-              <FormControl fullWidth>
-                <InputLabel id="product-select-label">Product</InputLabel>
-                <Select
-                  labelId="product-select-label"
-                  name="prdId"
-                  value={formData.prdId}
-                  label="Product"
-                  onChange={handleChange}
-                >
-                  {selectedProduct?.map((product) => (
-                    <MenuItem key={product.prdId} value={product.prdId}>
-                      {product.prdName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                fullWidth
+                options={selectedProduct}
+                getOptionLabel={(option) => option.prdName || ""}
+                onChange={(event, value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    prdId: value ? value.prdId : "",
+                  }))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Product"
+                    labelId="product-select-label"
+                    name="prdId"
+                    variant="outlined"
+                  />
+                )}
+              />
             </Grid>
             <Grid size={{ xs: 12, sm: 3 }}>
               <TextField
