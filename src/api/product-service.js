@@ -30,6 +30,6 @@ export const getProductDetailsList = async () => {
     return response;
   } catch (error) {
     console.log(error.response?.msg);
-    toast.error(error.response?.data?.msg);
+    toast.error(error.response?.data?.msg || "Failed to get product list");
   }
 };

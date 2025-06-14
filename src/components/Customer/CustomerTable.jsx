@@ -50,7 +50,7 @@ export default function CustomerTable() {
         <Button
           variant="contained"
           startIcon={<Icon icon={"mingcute:add-line"} />}
-          onClick={() => navigate("/customer/add")}
+          onClick={() => navigate("/customers/add")}
         >
           New Customer
         </Button>

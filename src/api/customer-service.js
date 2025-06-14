@@ -18,6 +18,6 @@ export const getCustomerDetailsList = async () => {
     return response;
   } catch (error) {
     console.log(error.response?.data?.msg);
-    toast.error(error.response?.data?.msg);
+    toast.error(error.response?.data?.msg || "Failed to get customer list");
   }
 };
