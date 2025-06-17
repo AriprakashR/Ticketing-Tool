@@ -16,6 +16,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "../../utils/toastService";
+import { postMachineDetails } from "../../api/machine-service";
 import { getCustomerDetailsList, getSpecficCustomerDetails } from "../../api/customer-service";
 import { getProductDetailsList } from "../../api/product-service";
 
@@ -33,7 +36,7 @@ const MachineForm = () => {
     custBillAddId: "",
     custShipAddId: "",
   });
-
+  const navigate = useNavigate();
   const [selectedCustomer, setSelectedCustomer] = useState([]);
   const [selectedCustomerBillingAddress, setSelectedCustomerBillingAddress] = useState({});
   const [selectedCustomerShippingAddress, setSelectedCustomerShippingAddress] = useState([]);
@@ -100,9 +103,21 @@ const MachineForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted:", formData);
+    try {
+      const response = await postMachineDetails(formData);
+      if (response?.status === "OK") {
+        toast.success("Machine details added successfully");
+        console.log("Machine Details Submission Response:", response.msg);
+        navigate(-1);
+      } else {
+        console.log("Machine Details Submisson failed");
+      }
+    } catch (error) {
+      console.log("Machine Details Submission:", error);
+      toast.error("An error occurred while submitting the machine form.", error);
+    }
   };
 
   return (
