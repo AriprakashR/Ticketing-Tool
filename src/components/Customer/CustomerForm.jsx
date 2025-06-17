@@ -26,28 +26,24 @@ const CustomerForm = () => {
     ctcPh: "",
     email: "",
     gstNo: "",
-    cusBAdd1: "",
-    cusBAdd2: "",
-    cusBPcode: "",
-    cusBState: "",
-    cusBCity: "",
-    cusSAdd1: "",
-    cusSAdd2: "",
-    cusSPcode: "",
-    cusSState: "",
-    cusSCity: "",
+    custBAdd1: "",
+    custBAdd2: "",
+    custBPcode: "",
+    custBState: "",
+    custBCity: "",
+    custSAdd1: "",
+    custSAdd2: "",
+    custSPcode: "",
+    custSState: "",
+    custSCity: "",
   });
   const [isSameAsBilling, setIsSameAsBilling] = useState(false);
   const [billingCityOptions, setBillingCityOptions] = useState(["Select City"]);
-  const [shippingCityOptions, setShippingCityOptions] = useState([
-    "Select City",
-  ]);
+  const [shippingCityOptions, setShippingCityOptions] = useState(["Select City"]);
 
   const fetchPincodeDetails = async (pincode, type) => {
     try {
-      const response = await fetch(
-        `https://api.postalpincode.in/pincode/${pincode}`
-      );
+      const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
       const data = await response.json();
 
       console.log(data[0].PostOffice);
@@ -62,15 +58,15 @@ const CustomerForm = () => {
           setBillingCityOptions(uniqueCities);
           setFormData((prev) => ({
             ...prev,
-            cusBState: postOffices[0].State,
-            cusBCity: postOffices[0].District,
+            custBState: postOffices[0].State,
+            custBCity: postOffices[0].District,
           }));
         } else {
           setShippingCityOptions(uniqueCities);
           setFormData((prev) => ({
             ...prev,
-            cusSState: postOffices[0].State,
-            cusSCity: postOffices[0].District,
+            custSState: postOffices[0].State,
+            custSCity: postOffices[0].District,
           }));
         }
       } else {
@@ -79,15 +75,15 @@ const CustomerForm = () => {
           setBillingCityOptions(["Select City"]);
           setFormData((prev) => ({
             ...prev,
-            cusBState: "",
-            cusBCity: "",
+            custBState: "",
+            custBCity: "",
           }));
         } else {
           setShippingCityOptions(["Select City"]);
           setFormData((prev) => ({
             ...prev,
-            cusSState: "",
-            cusSCity: "",
+            custSState: "",
+            custSCity: "",
           }));
         }
       }
@@ -105,10 +101,10 @@ const CustomerForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "cusBPcode" && value.length === 6) {
+    if (name === "custBPcode" && value.length === 6) {
       fetchPincodeDetails(value, "billing");
     }
-    if (name === "cusSPcode" && value.length === 6) {
+    if (name === "custSPcode" && value.length === 6) {
       fetchPincodeDetails(value, "shipping");
     }
 
@@ -133,22 +129,22 @@ const CustomerForm = () => {
     if (checked) {
       setFormData((prevData) => ({
         ...prevData,
-        cusSAdd1: prevData.cusBAdd1,
-        cusSAdd2: prevData.cusBAdd2,
-        cusSPcode: prevData.cusBPcode,
-        cusSState: prevData.cusBState,
-        cusSCity: prevData.cusBCity,
+        custSAdd1: prevData.custBAdd1,
+        custSAdd2: prevData.custBAdd2,
+        custSPcode: prevData.custBPcode,
+        custSState: prevData.custBState,
+        custSCity: prevData.custBCity,
       }));
 
       setShippingCityOptions(billingCityOptions);
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        cusSAdd1: "",
-        cusSAdd2: "",
-        cusSPcode: "",
-        cusSState: "",
-        cusSCity: "",
+        custSAdd1: "",
+        custSAdd2: "",
+        custSPcode: "",
+        custSState: "",
+        custSCity: "",
       }));
       setShippingCityOptions(["Select City"]);
     }
@@ -198,13 +194,7 @@ const CustomerForm = () => {
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                name="ctcPh"
-                label="Phone"
-                fullWidth
-                value={formData.ctcPh}
-                onChange={handleChange}
-              />
+              <TextField name="ctcPh" label="Phone" fullWidth value={formData.ctcPh} onChange={handleChange} />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
@@ -217,50 +207,44 @@ const CustomerForm = () => {
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                name="gstNo"
-                label="GST Number"
-                fullWidth
-                value={formData.gstNo}
-                onChange={handleChange}
-              />
+              <TextField name="gstNo" label="GST Number" fullWidth value={formData.gstNo} onChange={handleChange} />
             </Grid>
             <Grid size={{ xs: 12 }}>
               <Typography variant="subtitle1">Billing Address</Typography>
             </Grid>
             <Grid size={{ xs: 12 }}>
               <TextField
-                name="cusBAdd1"
+                name="custBAdd1"
                 label="Address Line 1"
                 fullWidth
-                value={formData.cusBAdd1}
+                value={formData.custBAdd1}
                 onChange={handleChange}
               />
             </Grid>
             <Grid size={{ xs: 12 }}>
               <TextField
-                name="cusBAdd2"
+                name="custBAdd2"
                 label="Address Line 2"
                 fullWidth
-                value={formData.cusBAdd2}
+                value={formData.custBAdd2}
                 onChange={handleChange}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
-                name="cusBPcode"
+                name="custBPcode"
                 label="Pincode"
                 fullWidth
-                value={formData.cusBPcode}
+                value={formData.custBPcode}
                 onChange={handleChange}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
-                name="cusBState"
+                name="custBState"
                 label="State"
                 fullWidth
-                value={formData.cusBState}
+                value={formData.custBState}
                 onChange={handleChange}
               />
             </Grid>
@@ -269,9 +253,9 @@ const CustomerForm = () => {
                 <InputLabel id="billing-city-select-label">City</InputLabel>
                 <Select
                   labelId="billing-city-select-label"
-                  name="cusBCity"
+                  name="custBCity"
                   label="City"
-                  value={formData.cusBCity}
+                  value={formData.custBCity}
                   onChange={handleChange}
                 >
                   {billingCityOptions.length > 0 &&
@@ -285,13 +269,7 @@ const CustomerForm = () => {
             </Grid>
             <Grid size={{ xs: 12 }}>
               <FormControlLabel
-                control={
-                  <Checkbox
-                    name="sameAsBilling"
-                    checked={isSameAsBilling}
-                    onChange={handleCheckbox}
-                  />
-                }
+                control={<Checkbox name="sameAsBilling" checked={isSameAsBilling} onChange={handleCheckbox} />}
                 label="Copy to Shipping Address"
               />
             </Grid>
@@ -302,40 +280,40 @@ const CustomerForm = () => {
             </Grid>
             <Grid size={{ xs: 12 }}>
               <TextField
-                name="cusSAdd1"
+                name="custSAdd1"
                 label="Address Line 1"
                 fullWidth
-                value={formData.cusSAdd1}
+                value={formData.custSAdd1}
                 onChange={handleChange}
                 disabled={isSameAsBilling}
               />
             </Grid>
             <Grid size={{ xs: 12 }}>
               <TextField
-                name="cusSAdd2"
+                name="custSAdd2"
                 label="Address Line 2"
                 fullWidth
-                value={formData.cusSAdd2}
+                value={formData.custSAdd2}
                 onChange={handleChange}
                 disabled={isSameAsBilling}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
-                name="cusSPcode"
+                name="custSPcode"
                 label="Pincode"
                 fullWidth
-                value={formData.cusSPcode}
+                value={formData.custSPcode}
                 onChange={handleChange}
                 disabled={isSameAsBilling}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
-                name="cusSState"
+                name="custSState"
                 label="State"
                 fullWidth
-                value={formData.cusSState}
+                value={formData.custSState}
                 onChange={handleChange}
                 disabled={isSameAsBilling}
               />
@@ -345,9 +323,9 @@ const CustomerForm = () => {
                 <InputLabel id="shipping-city-select-label">City</InputLabel>
                 <Select
                   labelId="shipping-city-select-label"
-                  name="cusSCity"
+                  name="custSCity"
                   label="City"
-                  value={formData.cusSCity}
+                  value={formData.custSCity}
                   onChange={handleChange}
                   disabled={isSameAsBilling}
                 >
@@ -360,12 +338,7 @@ const CustomerForm = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid
-              size={12}
-              display="flex"
-              justifyContent={{ xs: "center", sm: "flex-end" }}
-              mt={2}
-            >
+            <Grid size={12} display="flex" justifyContent={{ xs: "center", sm: "flex-end" }} mt={2}>
               <Button type="submit" variant="contained">
                 Submit
               </Button>

@@ -22,45 +22,31 @@ export const getCustomerDetailsList = async () => {
   }
 };
 
-export const getSpecficCustomerDetails = async (cusId) => {
+export const getSpecficCustomerDetails = async (custId) => {
   try {
-    const response = await instance.get(
-      `customer/getSpecficCustomerDetails/${cusId}`
-    );
+    const response = await instance.get(`customer/getSpecficCustomerDetails/${custId}`);
     console.log(response);
     return response;
   } catch (error) {
     console.log(error.response?.data?.msg);
-    toast.error(
-      error.response?.data?.msg || "Failed to get sepecific customer detail"
-    );
+    toast.error(error.response?.data?.msg || "Failed to get sepecific customer detail");
   }
 };
 
-export const getSpecificCustomerBillingAddress = async (cusBillAddId) => {
+export const getSpecificCustomerBillingAddress = async (custBillAddId) => {
   try {
-    const response = await instance.get(
-      `customer/getSpecCustBillAddress/${cusBillAddId}`
-    );
+    const response = await instance.get(`customer/getSpecCustBillAddress/${custBillAddId}`);
     return response;
   } catch (error) {
-    toast.error(
-      error.response?.data?.msg ||
-        "Failed to get customer billing address detail"
-    );
+    toast.error(error.response?.data?.msg || "Failed to get customer billing address detail");
   }
 };
 
-export const getSpecificCustomerShippingAddress = async (cusShipAddId) => {
+export const getSpecificCustomerShippingAddress = async (custShipAddId) => {
   try {
-    const response = await instance.get(
-      `customer/getSpecCustShipAddress/${cusShipAddId}`
-    );
+    const response = await instance.get(`customer/getSpecCustShipAddress/${custShipAddId}`);
     return response;
   } catch (error) {
-    toast.error(
-      error.response?.data?.msg ||
-        "Failed to get customer shipping address detail"
-    );
+    toast.error(error.response?.data?.msg || "Failed to get customer shipping address detail");
   }
 };

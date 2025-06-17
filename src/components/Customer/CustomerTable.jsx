@@ -59,7 +59,7 @@ export default function CustomerTable() {
       <DataGrid
         rows={tableData}
         columns={columns}
-        getRowId={(row) => row.cusId}
+        getRowId={(row) => row.custId}
         pagination
         paginationModel={{
           page: currentPage - 1,

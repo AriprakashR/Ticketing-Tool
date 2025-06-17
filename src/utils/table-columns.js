@@ -2,7 +2,7 @@
 
 export const customerTableColumns = [
   {
-    field: "cusId",
+    field: "custId",
     headerName: "ID",
     sortable: true,
     width: 80,

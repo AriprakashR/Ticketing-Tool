@@ -28,12 +28,10 @@ const MachineForm = () => {
     amcStartDate: null,
     amcEndDate: null,
     mcnStatucCode: 0,
-    assignBranchId: "",
-    assignRegionalId: "",
     prdId: "",
     custId: "",
-    cusBillAddId: "",
-    cusShipAddId: "",
+    custBillAddId: "",
+    custShipAddId: "",
   });
 
   const [selectedCustomer, setSelectedCustomer] = useState([]);
@@ -66,19 +64,19 @@ const MachineForm = () => {
     }
   }, [formData.wrntyStartDate, formData.wrntyPeriod]);
 
-  const handleCustomerSelection = async (selectedCus) => {
+  const handleCustomerSelection = async (selectedCust) => {
     try {
-      if (!selectedCus?.cusId) return;
+      if (!selectedCust?.custId) return;
 
-      const response = await getSpecficCustomerDetails(selectedCus.cusId);
+      const response = await getSpecficCustomerDetails(selectedCust.custId);
       const billingAddress = response?.data?.customerBillingAddress || {};
       const shippingAddress = response?.data?.customerShippingAddress || [];
 
       setFormData((prevData) => ({
         ...prevData,
-        custId: selectedCus.cusId.toString(),
-        cusBillAddId: billingAddress.cusBillAddId || "",
-        cusShipAddId: shippingAddress.cusShipAddId || "",
+        custId: selectedCust.custId.toString(),
+        custBillAddId: billingAddress.custBillAddId || "",
+        custShipAddId: shippingAddress.custShipAddId || "",
       }));
 
       setSelectedCustomerBillingAddress(billingAddress);
@@ -92,10 +90,10 @@ const MachineForm = () => {
     const { name, value } = e.target;
 
     if (name === "custId") {
-      const selectedCus = selectedCustomer.find((customer) => customer?.cusId?.toString() === value);
-      if (selectedCus) {
+      const selectedCust = selectedCustomer.find((customer) => customer?.custId?.toString() === value);
+      if (selectedCust) {
         setFormData((prevData) => ({ ...prevData, custId: value }));
-        await handleCustomerSelection(selectedCus);
+        await handleCustomerSelection(selectedCust);
       }
     } else {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -137,16 +135,16 @@ const MachineForm = () => {
               {/* Billing Address */}
               <Grid size={{ xs: 12, sm: 4 }}>
                 <TextField
-                  name="cusBillAddId"
+                  name="custBillAddId"
                   label="Billing Address"
                   fullWidth
                   value={
-                    selectedCustomerBillingAddress?.cusBillAddId
-                      ? `${selectedCustomerBillingAddress?.cusBAdd1 || ""}, ${
-                          selectedCustomerBillingAddress?.cusBAdd2 || ""
-                        }, ${selectedCustomerBillingAddress?.cusBCity || ""}, ${
-                          selectedCustomerBillingAddress?.cusBState || ""
-                        } - ${selectedCustomerBillingAddress?.cusBPcode || ""}`
+                    selectedCustomerBillingAddress?.custBillAddId
+                      ? `${selectedCustomerBillingAddress?.custBAdd1 || ""}, ${
+                          selectedCustomerBillingAddress?.custBAdd2 || ""
+                        }, ${selectedCustomerBillingAddress?.custBCity || ""}, ${
+                          selectedCustomerBillingAddress?.custBState || ""
+                        } - ${selectedCustomerBillingAddress?.custBPcode || ""}`
                       : ""
                   }
                   inputProps={{ readOnly: true }}
@@ -159,14 +157,14 @@ const MachineForm = () => {
                   <InputLabel id="shipping-address-select-label">Shipping Address</InputLabel>
                   <Select
                     labelId="shipping-address-select-label"
-                    name="cusShipAddId"
-                    value={formData.cusShipAddId}
+                    name="custShipAddId"
+                    value={formData.custShipAddId}
                     label="Shipping Address"
                     onChange={handleChange}
                   >
                     {selectedCustomerShippingAddress.map((addr) => (
-                      <MenuItem key={addr.cusShipAddId} value={addr.cusShipAddId}>
-                        {`${addr.cusSAdd1}, ${addr.cusSAdd2}, ${addr.cusSCity}, ${addr.cusSState} - ${addr.cusSPcode}`}
+                      <MenuItem key={addr.custShipAddId} value={addr.custShipAddId}>
+                        {`${addr.custSAdd1}, ${addr.custSAdd2}, ${addr.custSCity}, ${addr.custSState} - ${addr.custSPcode}`}
                       </MenuItem>
                     ))}
                   </Select>
