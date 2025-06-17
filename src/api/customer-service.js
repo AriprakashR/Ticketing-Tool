@@ -21,3 +21,46 @@ export const getCustomerDetailsList = async () => {
     toast.error(error.response?.data?.msg || "Failed to get customer list");
   }
 };
+
+export const getSpecficCustomerDetails = async (cusId) => {
+  try {
+    const response = await instance.get(
+      `customer/getSpecficCustomerDetails/${cusId}`
+    );
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log(error.response?.data?.msg);
+    toast.error(
+      error.response?.data?.msg || "Failed to get sepecific customer detail"
+    );
+  }
+};
+
+export const getSpecificCustomerBillingAddress = async (cusBillAddId) => {
+  try {
+    const response = await instance.get(
+      `customer/getSpecCustBillAddress/${cusBillAddId}`
+    );
+    return response;
+  } catch (error) {
+    toast.error(
+      error.response?.data?.msg ||
+        "Failed to get customer billing address detail"
+    );
+  }
+};
+
+export const getSpecificCustomerShippingAddress = async (cusShipAddId) => {
+  try {
+    const response = await instance.get(
+      `customer/getSpecCustShipAddress/${cusShipAddId}`
+    );
+    return response;
+  } catch (error) {
+    toast.error(
+      error.response?.data?.msg ||
+        "Failed to get customer shipping address detail"
+    );
+  }
+};
