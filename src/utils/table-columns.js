@@ -5,31 +5,31 @@ export const customerTableColumns = [
     field: "custId",
     headerName: "ID",
     sortable: true,
-    width: 80,
+    width: 90,
   },
   {
     field: "custName",
-    headerName: "Customer Name",
+    headerName: "Customer",
     sortable: true,
-    width: 200,
+    width: 300,
   },
   {
     field: "ctcPersName",
     headerName: "Contact Person",
     sortable: false,
-    width: 180,
+    width: 300,
   },
   {
     field: "email",
     headerName: "Email",
     sortable: false,
-    width: 280,
+    width: 300,
   },
   {
     field: "ctcPh",
     headerName: "Mobile No",
     sortable: false,
-    width: 200,
+    width: 300,
   },
 ];
 
@@ -44,19 +44,58 @@ export const productTableColumns = [
     field: "prdCode",
     headerName: "Product Code",
     sortable: true,
-    width: 150,
+    width: 300,
   },
   {
     field: "prdName",
-    headerName: "Product Name",
+    headerName: "Product",
+    sortable: true,
+    width: 300,
+  },
+  {
+    field: "prdModel",
+    headerName: "Model",
+    sortable: false,
+    width: 300,
+  },
+  {
+    field: "prdBrand",
+    headerName: "Brand",
+    sortable: true,
+    width: 300,
+  },
+];
+
+export const machineTableColumns = [
+  {
+    field: "mcnId",
+    headerName: "ID",
+    sortable: true,
+    width: 100,
+  },
+  {
+    field: "mcnCode",
+    headerName: "Machine Code",
     sortable: true,
     width: 200,
   },
+  {
+    field: "mcnSno",
+    headerName: "Serial No",
+    sortable: false,
+    width: 300,
+  },
+  {
+    field: "prdName",
+    headerName: "Product",
+    sortable: false,
+    width: 300,
+  },
 
   {
-    field: "prdDescription",
-    headerName: "Description",
+    field: "custName",
+    headerName: "Customer",
     sortable: false,
-    width: 850,
+    width: 400,
   },
 ];

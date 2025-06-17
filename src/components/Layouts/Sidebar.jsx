@@ -34,37 +34,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   };
 
   const SIDEBAR_LINKS = [
-    {
-      id: 1,
-      icon: "solar:widget-4-bold-duotone",
-      label: "Dashboard",
-      path: "/dashboard",
-    },
-    {
-      id: 2,
-      icon: "solar:users-group-rounded-bold-duotone",
-      label: "Customer",
-      path: "/customers",
-    },
-    {
-      id: 3,
-      icon: "solar:bag-smile-bold-duotone",
-      label: "Product",
-      path: "/products",
-    },
-    {
-      id: 4,
-      icon: "solar:chart-2-bold-duotone",
-      label: "Reports",
-      path: "/reports",
-    },
-
-    {
-      id: 5,
-      icon: "solar:settings-bold-duotone",
-      label: "Settings",
-      path: "/settings",
-    },
+    { id: 1, icon: "solar:widget-4-bold-duotone", label: "Dashboard", path: "/dashboard" },
+    { id: 2, icon: "solar:users-group-rounded-bold-duotone", label: "Customer", path: "/customers" },
+    { id: 3, icon: "solar:bag-smile-bold-duotone", label: "Product", path: "/products" },
+    { id: 4, icon: "solar:washing-machine-bold-duotone", label: "Machine", path: "/machines" },
+    { id: 5, icon: "solar:chart-2-bold-duotone", label: "Reports", path: "/reports" },
+    { id: 6, icon: "solar:settings-bold-duotone", label: "Settings", path: "/settings" },
   ];
 
   const renderListItem = (id, icon, label, path) => {
@@ -76,19 +51,13 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
               sx={{
                 minHeight: 48,
                 flexDirection: collapsed && isMonitor ? "column" : "row",
-                justifyContent:
-                  collapsed && isMonitor ? "center" : "flex-start",
+                justifyContent: collapsed && isMonitor ? "center" : "flex-start",
                 transition: "all 0.3s ease",
                 borderRadius: 1.5,
                 mx: collapsed ? -1.5 : 0,
-                backgroundColor: isActive
-                  ? theme.palette.mode === "dark"
-                    ? "#1D242B"
-                    : "#F6F7F8"
-                  : "transparent",
+                backgroundColor: isActive ? (theme.palette.mode === "dark" ? "#1D242B" : "#F6F7F8") : "transparent",
                 "&:hover": {
-                  backgroundColor:
-                    theme.palette.mode === "dark" ? "#1D242B" : "#F6F7F8",
+                  backgroundColor: theme.palette.mode === "dark" ? "#1D242B" : "#F6F7F8",
                 },
               }}
             >
@@ -117,8 +86,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                     mt: 0.5,
                     whiteSpace: "nowrap",
                     textAlign: "center",
-                    color: (theme) =>
-                      theme.palette.mode === "dark" ? "#919EAB" : "#637381",
+                    color: (theme) => (theme.palette.mode === "dark" ? "#919EAB" : "#637381"),
                   }}
                 >
                   {label}
@@ -133,11 +101,9 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                   }}
                   sx={{
                     opacity: collapsed && isMonitor ? 0 : 1,
-                    transform:
-                      collapsed && isMonitor ? "translateX(-10px)" : "none",
+                    transform: collapsed && isMonitor ? "translateX(-10px)" : "none",
                     transition: "opacity 0.3s ease, transform 0.3s ease",
-                    color: (theme) =>
-                      theme.palette.mode === "dark" ? "#919EAB" : "#637381",
+                    color: (theme) => (theme.palette.mode === "dark" ? "#919EAB" : "#637381"),
                   }}
                 />
               )}
@@ -188,38 +154,25 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
               height: 25,
               transition: "transform 0.3s ease, right 0.3s ease",
               "&:hover": {
-                backgroundColor: (theme) =>
-                  theme.palette.mode === "dark" ? "#28323D" : "#F4F6F8",
+                backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#28323D" : "#F4F6F8"),
               },
             }}
           >
             {collapsed ? (
-              <ChevronRightIcon
-                sx={{ fontSize: 20, transform: "scaleX(0.7)" }}
-              />
+              <ChevronRightIcon sx={{ fontSize: 20, transform: "scaleX(0.7)" }} />
             ) : (
-              <ChevronLeftIcon
-                sx={{ fontSize: 20, transform: "scaleX(0.7)" }}
-              />
+              <ChevronLeftIcon sx={{ fontSize: 20, transform: "scaleX(0.7)" }} />
             )}
           </IconButton>
         )}
       </Toolbar>
       {/* Logo goes here */}
 
-      <List>
-        {SIDEBAR_LINKS.map(({ id, icon, label, path }) =>
-          renderListItem(id, icon, label, path)
-        )}
-      </List>
+      <List>{SIDEBAR_LINKS.map(({ id, icon, label, path }) => renderListItem(id, icon, label, path))}</List>
     </Box>
   );
 
-  const currentDrawerWidth = isMonitor
-    ? collapsed
-      ? collapsedWidth
-      : drawerWidth
-    : drawerWidth;
+  const currentDrawerWidth = isMonitor ? (collapsed ? collapsedWidth : drawerWidth) : drawerWidth;
   return (
     <>
       {!isMonitor && (
@@ -259,9 +212,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
               duration: theme.transitions.duration.complex,
             }),
             boxShadow: (theme) =>
-              theme.palette.mode === "dark"
-                ? "0 0 0 0.5px rgba(255, 255, 255, 0.1)"
-                : "0 0 0 0.5px rgba(0, 0, 0, 0.1)",
+              theme.palette.mode === "dark" ? "0 0 0 0.5px rgba(255, 255, 255, 0.1)" : "0 0 0 0.5px rgba(0, 0, 0, 0.1)",
           },
         }}
       >
