@@ -1,5 +1,5 @@
-import { Margin } from "@mui/icons-material";
 import { createTheme } from "@mui/material/styles";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 
 const lightShadows = [
   "none", // elevation 0
@@ -35,6 +35,32 @@ const baseSettings = {
     MuiTextField: {
       defaultProps: {
         variant: "outlined",
+      },
+    },
+    MuiSelect: {
+      defaultProps: {
+        IconComponent: KeyboardArrowDownRoundedIcon,
+      },
+      styleOverrides: {
+        icon: {
+          color: "#637381",
+          fontSize: "20px",
+          right: 10,
+        },
+      },
+    },
+    MuiAutocomplete: {
+      defaultProps: {
+        IconComponent: KeyboardArrowDownRoundedIcon,
+      },
+      styleOverrides: {
+        popupIndicator: {
+          color: "#637381",
+          fontSize: 20,
+        },
+        clearIndicator: {
+          color: "#637381",
+        },
       },
     },
     MuiOutlinedInput: {
@@ -81,11 +107,27 @@ const baseSettings = {
         },
       },
     },
+    // In baseSettings.components
+    MUIDatePicker: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "inherit", // This will inherit from MuiOutlinedInput styles
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "inherit",
+          },
+          "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "inherit",
+          },
+        },
+      },
+    },
   },
   MuiSnackbar: {
     styleOverrides: {
       root: {
-        top: 80, // offset from top (adjust as needed)
+        top: 80,
         borderRadius: 12,
         boxShadow: "0px 8px 24px rgba(0,0,0,0.2)",
         padding: "0 12px",
@@ -159,6 +201,32 @@ export const darkTheme = createTheme({
   },
   components: {
     ...baseSettings.components,
+    MuiSelect: {
+      defaultProps: {
+        IconComponent: KeyboardArrowDownRoundedIcon,
+      },
+      styleOverrides: {
+        icon: {
+          color: "#919EAB",
+          fontSize: "20px",
+          right: 10,
+        },
+      },
+    },
+    MuiAutocomplete: {
+      defaultProps: {
+        IconComponent: KeyboardArrowDownRoundedIcon,
+      },
+      styleOverrides: {
+        popupIndicator: {
+          color: "#919EAB",
+          fontSize: 20,
+        },
+        clearIndicator: {
+          color: "#919EAB",
+        },
+      },
+    },
     MuiCard: {
       styleOverrides: {
         root: {

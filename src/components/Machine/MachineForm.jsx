@@ -1,23 +1,9 @@
-import {
-  Box,
-  TextField,
-  Grid,
-  Button,
-  Typography,
-  Card,
-  CardContent,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Autocomplete,
-} from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { Box, TextField, Grid, Button, Typography, Card, CardContent, MenuItem, Autocomplete } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "../../utils/toastService";
+import DatePicker from "../UI/DatePicker";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { postMachineDetails } from "../../api/machine-service";
 import { getCustomerDetailsList, getSpecficCustomerDetails } from "../../api/customer-service";
 import { getProductDetailsList } from "../../api/product-service";
@@ -126,190 +112,176 @@ const MachineForm = () => {
         <Typography variant="h6" mb={4}>
           Machine Form
         </Typography>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <Box component="form" onSubmit={handleSubmit} noValidate>
-            <Grid container spacing={2}>
-              {/* Customer Selector */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Autocomplete
-                  fullWidth
-                  options={selectedCustomer}
-                  getOptionLabel={(option) => option?.custName || ""}
-                  onChange={(event, value) => {
-                    if (value) handleCustomerSelection(value);
-                    else {
-                      setFormData((prev) => ({ ...prev, custId: "" }));
-                      setSelectedCustomerBillingAddress({});
-                      setSelectedCustomerShippingAddress([]);
-                    }
-                  }}
-                  renderInput={(params) => <TextField {...params} label="Customer" variant="outlined" />}
-                />
-              </Grid>
 
-              {/* Billing Address */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <TextField
-                  name="custBillAddId"
-                  label="Billing Address"
-                  fullWidth
-                  value={
-                    selectedCustomerBillingAddress?.custBillAddId
-                      ? `${selectedCustomerBillingAddress?.custBAdd1 || ""}, ${
-                          selectedCustomerBillingAddress?.custBAdd2 || ""
-                        }, ${selectedCustomerBillingAddress?.custBCity || ""}, ${
-                          selectedCustomerBillingAddress?.custBState || ""
-                        } - ${selectedCustomerBillingAddress?.custBPcode || ""}`
-                      : ""
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          <Grid container spacing={2}>
+            {/* Customer Selector */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <Autocomplete
+                fullWidth
+                popupIcon={<KeyboardArrowDownRoundedIcon fontSize="24px" />}
+                options={selectedCustomer}
+                getOptionLabel={(option) => option?.custName || ""}
+                onChange={(event, value) => {
+                  if (value) handleCustomerSelection(value);
+                  else {
+                    setFormData((prev) => ({ ...prev, custId: "" }));
+                    setSelectedCustomerBillingAddress({});
+                    setSelectedCustomerShippingAddress([]);
                   }
-                  inputProps={{ readOnly: true }}
-                />
-              </Grid>
+                }}
+                renderInput={(params) => <TextField {...params} label="Select customer" variant="outlined" />}
+              />
+            </Grid>
 
-              {/* Shipping Address */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <FormControl fullWidth>
-                  <InputLabel id="shipping-address-select-label">Shipping Address</InputLabel>
-                  <Select
-                    labelId="shipping-address-select-label"
-                    name="custShipAddId"
-                    value={formData.custShipAddId}
-                    label="Shipping Address"
-                    onChange={handleChange}
-                  >
-                    {selectedCustomerShippingAddress.map((addr) => (
-                      <MenuItem key={addr.custShipAddId} value={addr.custShipAddId}>
-                        {`${addr.custSAdd1}, ${addr.custSAdd2}, ${addr.custSCity}, ${addr.custSState} - ${addr.custSPcode}`}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+            {/* Billing Address */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <TextField
+                name="custBillAddId"
+                label="Billing Address"
+                fullWidth
+                value={
+                  selectedCustomerBillingAddress?.custBillAddId
+                    ? `${selectedCustomerBillingAddress?.custBAdd1 || ""}, ${
+                        selectedCustomerBillingAddress?.custBAdd2 || ""
+                      }, ${selectedCustomerBillingAddress?.custBCity || ""}, ${
+                        selectedCustomerBillingAddress?.custBState || ""
+                      } - ${selectedCustomerBillingAddress?.custBPcode || ""}`
+                    : ""
+                }
+                inputProps={{ readOnly: true }}
+              />
+            </Grid>
 
-              {/* Product Selector */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Autocomplete
-                  fullWidth
-                  options={selectedProduct}
-                  getOptionLabel={(option) => option?.prdName || ""}
-                  onChange={(event, value) => setFormData((prev) => ({ ...prev, prdId: value?.prdId || "" }))}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option.prdId}>
-                      <Box display="flex" flexDirection="column" alignItems="flex-start" width="100%">
-                        <Box display="flex" width="100%">
-                          <Typography variant="subtitle1">{option.prdName}</Typography>
-                          <Typography variant="caption" color="text.secondary" ml={1} mt={0.7}>
-                            Model: {option.prdModel}
-                          </Typography>
-                        </Box>
-                        <Typography variant="caption" color="text.secondary" noWrap>
-                          {option.prdDescription}
+            {/* Shipping Address */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <TextField
+                fullWidth
+                select
+                id="shipping-address-select-label"
+                name="custShipAddId"
+                label="Shipping Address"
+                value={formData.custShipAddId}
+                onChange={handleChange}
+              >
+                {selectedCustomerShippingAddress.map((addr) => (
+                  <MenuItem key={addr.custShipAddId} value={addr.custShipAddId}>
+                    {`${addr.custSAdd1}, ${addr.custSAdd2}, ${addr.custSCity}, ${addr.custSState} - ${addr.custSPcode}`}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            {/* Product Selector */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <Autocomplete
+                fullWidth
+                popupIcon={<KeyboardArrowDownRoundedIcon fontSize="24px" />}
+                options={selectedProduct}
+                getOptionLabel={(option) => option?.prdName || ""}
+                onChange={(event, value) => setFormData((prev) => ({ ...prev, prdId: value?.prdId || "" }))}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.prdId}>
+                    <Box display="flex" flexDirection="column" alignItems="flex-start" width="100%">
+                      <Box display="flex" width="100%">
+                        <Typography variant="subtitle1">{option.prdName}</Typography>
+                        <Typography variant="caption" color="text.secondary" ml={1} mt={0.7}>
+                          Model: {option.prdModel}
                         </Typography>
                       </Box>
-                    </li>
-                  )}
-                  renderInput={(params) => <TextField {...params} label="Product" variant="outlined" />}
-                />
-              </Grid>
-
-              {/* Serial No */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <TextField name="mcnSno" label="Serial No" fullWidth value={formData.mcnSno} onChange={handleChange} />
-              </Grid>
-
-              {/* Installation Date */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <DatePicker
-                  label="Installation Date"
-                  value={formData.instlDate}
-                  onChange={(newValue) => setFormData((prev) => ({ ...prev, instlDate: newValue }))}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
-                  sx={{ width: "300px" }}
-                />
-              </Grid>
-
-              {/* Warranty Period */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <TextField
-                  name="wrntyPeriod"
-                  label="Warranty Period (years)"
-                  type="number"
-                  fullWidth
-                  value={formData.wrntyPeriod}
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              {/* Warranty Start */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <DatePicker
-                  label="Warranty Start Date"
-                  value={formData.wrntyStartDate}
-                  onChange={(newValue) => setFormData((prev) => ({ ...prev, wrntyStartDate: newValue }))}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
-                  sx={{ width: "300px" }}
-                />
-              </Grid>
-
-              {/* Warranty End */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <DatePicker
-                  label="Warranty End Date"
-                  value={warrantyEndDate}
-                  readOnly
-                  onChange={() => {}}
-                  renderInput={(params) => <TextField {...params} fullWidth InputProps={{ readOnly: true }} />}
-                  sx={{ width: "300px" }}
-                />
-              </Grid>
-
-              {/* Machine Status */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <FormControl fullWidth>
-                  <InputLabel id="mcn-status-label">Machine Status</InputLabel>
-                  <Select
-                    labelId="mcn-status-label"
-                    name="mcnStatucCode"
-                    value={formData.mcnStatucCode}
-                    label="Machine Status"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value="70">In Warranty</MenuItem>
-                    <MenuItem value="71">Out of Warranty</MenuItem>
-                    <MenuItem value="80">In AMC</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* AMC Dates */}
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <DatePicker
-                  label="AMC Start Date"
-                  value={formData.amcStartDate}
-                  onChange={(newValue) => setFormData((prev) => ({ ...prev, amcStartDate: newValue }))}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
-                  sx={{ width: "300px" }}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <DatePicker
-                  label="AMC End Date"
-                  value={formData.amcEndDate}
-                  onChange={(newValue) => setFormData((prev) => ({ ...prev, amcEndDate: newValue }))}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
-                  sx={{ width: "300px" }}
-                />
-              </Grid>
-
-              {/* Submit Button */}
-              <Grid size={{ xs: 12 }} display="flex" justifyContent={{ xs: "center", sm: "flex-end" }}>
-                <Button type="submit" variant="contained">
-                  Submit
-                </Button>
-              </Grid>
+                      <Typography variant="caption" color="text.secondary" noWrap>
+                        {option.prdDescription}
+                      </Typography>
+                    </Box>
+                  </li>
+                )}
+                renderInput={(params) => <TextField {...params} label="Select product" variant="outlined" />}
+              />
             </Grid>
-          </Box>
-        </LocalizationProvider>
+
+            {/* Serial No */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <TextField name="mcnSno" label="Serial No" fullWidth value={formData.mcnSno} onChange={handleChange} />
+            </Grid>
+
+            {/* Installation Date */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <DatePicker
+                label="Installation Date"
+                value={formData.instlDate}
+                onChange={(newValue) => setFormData((prev) => ({ ...prev, instlDate: newValue }))}
+                slotProps={{ textField: { fullWidth: true } }}
+              />
+            </Grid>
+
+            {/* Warranty Period */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <TextField
+                name="wrntyPeriod"
+                label="Warranty Period (years)"
+                fullWidth
+                value={formData.wrntyPeriod}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            {/* Warranty Start */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <DatePicker
+                label="Warranty Start Date"
+                value={formData.wrntyStartDate}
+                onChange={(newValue) => setFormData((prev) => ({ ...prev, wrntyStartDate: newValue }))}
+                slotProps={{ textField: { fullWidth: true } }}
+              />
+            </Grid>
+
+            {/* Warranty End */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <DatePicker
+                label="Warranty End Date"
+                value={warrantyEndDate}
+                readOnly
+                disabled
+                onChange={() => {}}
+                slotProps={{ textField: { fullWidth: true } }}
+              />
+            </Grid>
+
+            {/* Machine Status */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <TextField fullWidth select id="mcn-status-label" label="Machine Status" value={formData.mcnStatucCode}>
+                <MenuItem value="70">In Warranty</MenuItem>
+                <MenuItem value="71">Out of Warranty</MenuItem>
+                <MenuItem value="80">In AMC</MenuItem>
+              </TextField>
+            </Grid>
+
+            {/* AMC Dates */}
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <DatePicker
+                label="AMC Start Date"
+                value={formData.amcStartDate}
+                onChange={(newValue) => setFormData((prev) => ({ ...prev, amcStartDate: newValue }))}
+                slotProps={{ textField: { fullWidth: true } }}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <DatePicker
+                label="AMC End Date"
+                value={formData.amcEndDate}
+                onChange={(newValue) => setFormData((prev) => ({ ...prev, amcEndDate: newValue }))}
+                slotProps={{ textField: { fullWidth: true } }}
+              />
+            </Grid>
+
+            {/* Submit Button */}
+            <Grid size={{ xs: 12 }} display="flex" justifyContent={{ xs: "center", sm: "flex-end" }}>
+              <Button type="submit" variant="contained">
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
       </CardContent>
     </Card>
   );
