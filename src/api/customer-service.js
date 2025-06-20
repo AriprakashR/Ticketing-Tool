@@ -6,8 +6,8 @@ export const postCustomerDetails = async (data) => {
     const response = await instance.post(`customer/createNewCustomer`, data);
     return response.data;
   } catch (error) {
-    console.log(error.response?.data?.msg);
-    toast.error(error.response?.data?.msg);
+    console.log(error.response?.data);
+    toast.error(error.response?.data?.msg || "Failed to submit customer details");
   }
 };
 
