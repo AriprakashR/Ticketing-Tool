@@ -27,3 +27,15 @@ export const validateCustomerForm = (formData, isSameAsBilling) => {
 
   return errors;
 };
+
+export const validateProductForm = (formData) => {
+  const errors = {};
+
+  if (!formData.prdCode.trim()) errors.prdCode = "Product code is required";
+  if (!formData.prdName.trim()) errors.prdName = "Product name is required";
+  if (!formData.prdModel.trim()) errors.prdModel = "Product model is required";
+  if (!formData.prdBrand.trim()) errors.prdBrand = "Product brand is required";
+  if (!formData.prdDescription.trim()) errors.prdDescription = "Product Description is required";
+
+  return errors;
+};
