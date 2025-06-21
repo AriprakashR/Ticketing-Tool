@@ -7,6 +7,7 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import { postMachineDetails } from "../../api/machine-service";
 import { getCustomerDetailsList, getSpecficCustomerDetails } from "../../api/customer-service";
 import { getProductDetailsList } from "../../api/product-service";
+import { validateMachineForm } from "../../utils/validator";
 
 const MachineForm = () => {
   const [formData, setFormData] = useState({
@@ -16,13 +17,15 @@ const MachineForm = () => {
     wrntyStartDate: null,
     amcStartDate: null,
     amcEndDate: null,
-    mcnStatucCode: 0,
+    mcnStatucCode: "",
     prdId: "",
     custId: "",
     custBillAddId: "",
     custShipAddId: "",
   });
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState([]);
   const [selectedCustomerBillingAddress, setSelectedCustomerBillingAddress] = useState({});
   const [selectedCustomerShippingAddress, setSelectedCustomerShippingAddress] = useState([]);
@@ -61,8 +64,8 @@ const MachineForm = () => {
       const billingAddress = response?.data?.customerBillingAddress || {};
       const shippingAddress = response?.data?.customerShippingAddress || [];
 
-      setFormData((prevData) => ({
-        ...prevData,
+      setFormData((prev) => ({
+        ...prev,
         custId: selectedCust.custId.toString(),
         custBillAddId: billingAddress.custBillAddId || "",
         custShipAddId: shippingAddress.custShipAddId || "",
@@ -70,6 +73,12 @@ const MachineForm = () => {
 
       setSelectedCustomerBillingAddress(billingAddress);
       setSelectedCustomerShippingAddress(shippingAddress);
+
+      setErrors((prev) => {
+        const errors = { ...prev };
+        delete errors.custBillAddId;
+        return errors;
+      });
     } catch (error) {
       console.error("Failed to fetch customer details", error);
     }
@@ -78,31 +87,44 @@ const MachineForm = () => {
   const handleChange = async (e) => {
     const { name, value } = e.target;
 
+    setErrors((prevErrors) => {
+      const errors = { ...prevErrors };
+      delete errors[name];
+      return errors;
+    });
+
     if (name === "custId") {
       const selectedCust = selectedCustomer.find((customer) => customer?.custId?.toString() === value);
       if (selectedCust) {
-        setFormData((prevData) => ({ ...prevData, custId: value }));
+        setFormData((prev) => ({ ...prev, custId: value }));
         await handleCustomerSelection(selectedCust);
       }
     } else {
-      setFormData((prevData) => ({ ...prevData, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await postMachineDetails(formData);
-      if (response?.status === "OK") {
-        toast.success("Machine details added successfully");
-        console.log("Machine Details Submission Response:", response.msg);
-        navigate(-1);
-      } else {
-        console.log("Machine Details Submisson failed");
+    const validationErrors = validateMachineForm(formData);
+
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        setLoading(true);
+        const res = await postMachineDetails(formData);
+        if (res?.status === "OK") {
+          toast.success("Machine details added successfully");
+          navigate(-1);
+        }
+      } catch (err) {
+        console.error("Submission error:", err);
+        toast.error("Error submitting the form.");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log("Machine Details Submission:", error);
-      toast.error("An error occurred while submitting the machine form.", error);
+    } else {
+      setErrors(validationErrors);
+      toast.error("Please check the fields with errors.");
     }
   };
 
@@ -119,18 +141,33 @@ const MachineForm = () => {
             <Grid size={{ xs: 12, sm: 4 }}>
               <Autocomplete
                 fullWidth
-                popupIcon={<KeyboardArrowDownRoundedIcon fontSize="24px" />}
                 options={selectedCustomer}
                 getOptionLabel={(option) => option?.custName || ""}
                 onChange={(event, value) => {
-                  if (value) handleCustomerSelection(value);
-                  else {
+                  if (value) {
+                    setFormData((prev) => ({ ...prev, custId: value?.custId || "" }));
+                    setErrors((prev) => {
+                      const errors = { ...prev };
+                      delete errors.custId;
+                      return errors;
+                    });
+                    handleCustomerSelection(value);
+                  } else {
                     setFormData((prev) => ({ ...prev, custId: "" }));
                     setSelectedCustomerBillingAddress({});
                     setSelectedCustomerShippingAddress([]);
                   }
                 }}
-                renderInput={(params) => <TextField {...params} label="Select customer" variant="outlined" />}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select customer"
+                    variant="outlined"
+                    error={!!errors.custId}
+                    helperText={errors.custId}
+                  />
+                )}
+                popupIcon={<KeyboardArrowDownRoundedIcon fontSize="24px" />}
               />
             </Grid>
 
@@ -149,7 +186,9 @@ const MachineForm = () => {
                       } - ${selectedCustomerBillingAddress?.custBPcode || ""}`
                     : ""
                 }
-                inputProps={{ readOnly: true }}
+                InputProps={{ readOnly: true }}
+                error={!!errors.custBillAddId}
+                helperText={errors.custBillAddId}
               />
             </Grid>
 
@@ -163,6 +202,8 @@ const MachineForm = () => {
                 label="Shipping Address"
                 value={formData.custShipAddId}
                 onChange={handleChange}
+                error={!!errors.custShipAddId}
+                helperText={errors.custShipAddId}
               >
                 {selectedCustomerShippingAddress.map((addr) => (
                   <MenuItem key={addr.custShipAddId} value={addr.custShipAddId}>
@@ -176,10 +217,16 @@ const MachineForm = () => {
             <Grid size={{ xs: 12, sm: 4 }}>
               <Autocomplete
                 fullWidth
-                popupIcon={<KeyboardArrowDownRoundedIcon fontSize="24px" />}
                 options={selectedProduct}
                 getOptionLabel={(option) => option?.prdName || ""}
-                onChange={(event, value) => setFormData((prev) => ({ ...prev, prdId: value?.prdId || "" }))}
+                onChange={(event, value) => {
+                  setFormData((prev) => ({ ...prev, prdId: value?.prdId || "" }));
+                  setErrors((prev) => {
+                    const errors = { ...prev };
+                    delete errors.prdId;
+                    return errors;
+                  });
+                }}
                 renderOption={(props, option) => (
                   <li {...props} key={option.prdId}>
                     <Box display="flex" flexDirection="column" alignItems="flex-start" width="100%">
@@ -195,13 +242,30 @@ const MachineForm = () => {
                     </Box>
                   </li>
                 )}
-                renderInput={(params) => <TextField {...params} label="Select product" variant="outlined" />}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select product"
+                    variant="outlined"
+                    error={!!errors.prdId}
+                    helperText={errors.prdId}
+                  />
+                )}
+                popupIcon={<KeyboardArrowDownRoundedIcon fontSize="24px" />}
               />
             </Grid>
 
             {/* Serial No */}
             <Grid size={{ xs: 12, sm: 4 }}>
-              <TextField name="mcnSno" label="Serial No" fullWidth value={formData.mcnSno} onChange={handleChange} />
+              <TextField
+                name="mcnSno"
+                label="Serial No"
+                fullWidth
+                value={formData.mcnSno}
+                onChange={handleChange}
+                error={!!errors.mcnSno}
+                helperText={errors.mcnSno}
+              />
             </Grid>
 
             {/* Installation Date */}
@@ -209,8 +273,15 @@ const MachineForm = () => {
               <DatePicker
                 label="Installation Date"
                 value={formData.instlDate}
-                onChange={(newValue) => setFormData((prev) => ({ ...prev, instlDate: newValue }))}
-                slotProps={{ textField: { fullWidth: true } }}
+                onChange={(newValue) => {
+                  setFormData((prev) => ({ ...prev, instlDate: newValue }));
+                  setErrors((prev) => {
+                    const errors = { ...prev };
+                    delete errors.instlDate;
+                    return errors;
+                  });
+                }}
+                slotProps={{ textField: { fullWidth: true, error: !!errors.instlDate, helperText: errors.instlDate } }}
               />
             </Grid>
 
@@ -222,6 +293,8 @@ const MachineForm = () => {
                 fullWidth
                 value={formData.wrntyPeriod}
                 onChange={handleChange}
+                error={!!errors.wrntyPeriod}
+                helperText={errors.wrntyPeriod}
               />
             </Grid>
 
@@ -230,8 +303,17 @@ const MachineForm = () => {
               <DatePicker
                 label="Warranty Start Date"
                 value={formData.wrntyStartDate}
-                onChange={(newValue) => setFormData((prev) => ({ ...prev, wrntyStartDate: newValue }))}
-                slotProps={{ textField: { fullWidth: true } }}
+                onChange={(newValue) => {
+                  setFormData((prev) => ({ ...prev, wrntyStartDate: newValue }));
+                  setErrors((prev) => {
+                    const errors = { ...prev };
+                    delete errors.wrntyStartDate;
+                    return errors;
+                  });
+                }}
+                slotProps={{
+                  textField: { fullWidth: true, error: !!errors.wrntyStartDate, helperText: errors.wrntyStartDate },
+                }}
               />
             </Grid>
 
@@ -242,17 +324,26 @@ const MachineForm = () => {
                 value={warrantyEndDate}
                 readOnly
                 disabled
-                onChange={() => {}}
                 slotProps={{ textField: { fullWidth: true } }}
               />
             </Grid>
 
             {/* Machine Status */}
             <Grid size={{ xs: 12, sm: 4 }}>
-              <TextField fullWidth select id="mcn-status-label" label="Machine Status" value={formData.mcnStatucCode}>
-                <MenuItem value="70">In Warranty</MenuItem>
-                <MenuItem value="71">Out of Warranty</MenuItem>
-                <MenuItem value="80">In AMC</MenuItem>
+              <TextField
+                fullWidth
+                select
+                id="mcn-status-label"
+                name="mcnStatucCode"
+                label="Machine Status"
+                value={formData.mcnStatucCode}
+                onChange={handleChange}
+                error={!!errors.mcnStatucCode}
+                helperText={errors.mcnStatucCode}
+              >
+                <MenuItem value={70}>In Warranty</MenuItem>
+                <MenuItem value={71}>Out of Warranty</MenuItem>
+                <MenuItem value={80}>In AMC</MenuItem>
               </TextField>
             </Grid>
 
@@ -261,22 +352,40 @@ const MachineForm = () => {
               <DatePicker
                 label="AMC Start Date"
                 value={formData.amcStartDate}
-                onChange={(newValue) => setFormData((prev) => ({ ...prev, amcStartDate: newValue }))}
-                slotProps={{ textField: { fullWidth: true } }}
+                onChange={(newValue) => {
+                  setFormData((prev) => ({ ...prev, amcStartDate: newValue }));
+                  setErrors((prev) => {
+                    const errors = { ...prev };
+                    delete errors.amcStartDate;
+                    return errors;
+                  });
+                }}
+                slotProps={{
+                  textField: { fullWidth: true, error: !!errors.amcStartDate, helperText: errors.amcStartDate },
+                }}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 4 }}>
               <DatePicker
                 label="AMC End Date"
                 value={formData.amcEndDate}
-                onChange={(newValue) => setFormData((prev) => ({ ...prev, amcEndDate: newValue }))}
-                slotProps={{ textField: { fullWidth: true } }}
+                onChange={(newValue) => {
+                  setFormData((prev) => ({ ...prev, amcEndDate: newValue }));
+                  setErrors((prev) => {
+                    const errors = { ...prev };
+                    delete errors.amcEndDate;
+                    return errors;
+                  });
+                }}
+                slotProps={{
+                  textField: { fullWidth: true, error: !!errors.amcEndDate, helperText: errors.amcEndDate },
+                }}
               />
             </Grid>
 
             {/* Submit Button */}
             <Grid size={{ xs: 12 }} display="flex" justifyContent={{ xs: "center", sm: "flex-end" }}>
-              <Button type="submit" variant="contained">
+              <Button type="submit" variant="contained" loading={loading} loadingPosition="start">
                 Submit
               </Button>
             </Grid>

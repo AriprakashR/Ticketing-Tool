@@ -39,3 +39,22 @@ export const validateProductForm = (formData) => {
 
   return errors;
 };
+
+export const validateMachineForm = (formData) => {
+  const errors = {};
+
+  if (!formData.custId.trim()) errors.custId = "Customer is required.";
+  if (!formData.custBillAddId) errors.custBillAddId = "Billing Address is required.";
+  if (!formData.custShipAddId) errors.custShipAddId = "Shipping Address is required.";
+  if (!formData.prdId) errors.prdId = "Product is required.";
+  if (!formData.mcnSno.trim()) errors.mcnSno = "Serial Number is required.";
+  if (!formData.instlDate) errors.instlDate = "Installation Date is required.";
+  if (!formData.wrntyPeriod || isNaN(formData.wrntyPeriod) || formData.wrntyPeriod <= 0)
+    errors.wrntyPeriod = "Valid Warranty Period is required.";
+  if (!formData.wrntyStartDate) errors.wrntyStartDate = "Warranty Start Date is required.";
+  if (!formData.mcnStatucCode) errors.mcnStatucCode = "Machine Status is required.";
+  if (!formData.amcStartDate) errors.amcStartDate = "AMC Start is required.";
+  if (!formData.amcEndDate) errors.amcEndDate = "AMC End Date is required.";
+
+  return errors;
+};
