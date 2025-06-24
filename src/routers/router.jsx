@@ -7,6 +7,7 @@ import CompanyForm from "../components/Company/CompanyForm";
 import BankForm from "../components/Company/BankForm";
 import Customers from "../pages/Customers";
 import CustomerForm from "../components/Customer/CustomerForm";
+import Employees from "../pages/Employees";
 import EmployeeForm from "../components/Employee/EmployeeForm";
 import Products from "../pages/Products";
 import ProductForm from "../components/Product/ProductForm";
@@ -32,7 +33,8 @@ export const routes = [
           { path: "/bank/add", element: <BankForm /> },
           { path: "/customers", element: <Customers /> },
           { path: "/customers/add", element: <CustomerForm /> },
-          { path: "/employee/add", element: <EmployeeForm /> },
+          { path: "/employees", element: <Employees /> },
+          { path: "/employees/add", element: <EmployeeForm /> },
           { path: "/products", element: <Products /> },
           { path: "/products/add", element: <ProductForm /> },
           { path: "/machines", element: <Machine /> },

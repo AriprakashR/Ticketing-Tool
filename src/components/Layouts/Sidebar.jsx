@@ -36,10 +36,11 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   const SIDEBAR_LINKS = [
     { id: 1, icon: "solar:widget-4-bold-duotone", label: "Dashboard", path: "/dashboard" },
     { id: 2, icon: "solar:users-group-rounded-bold-duotone", label: "Customer", path: "/customers" },
-    { id: 3, icon: "solar:bag-smile-bold-duotone", label: "Product", path: "/products" },
-    { id: 4, icon: "solar:washing-machine-bold-duotone", label: "Machine", path: "/machines" },
-    { id: 5, icon: "solar:chart-2-bold-duotone", label: "Reports", path: "/reports" },
-    { id: 6, icon: "solar:settings-bold-duotone", label: "Settings", path: "/settings" },
+    { id: 3, icon: "solar:user-speak-rounded-bold-duotone", label: "Employee", path: "/employees" },
+    { id: 4, icon: "solar:bag-smile-bold-duotone", label: "Product", path: "/products" },
+    { id: 5, icon: "solar:washing-machine-bold-duotone", label: "Machine", path: "/machines" },
+    { id: 6, icon: "solar:chart-2-bold-duotone", label: "Reports", path: "/reports" },
+    { id: 7, icon: "solar:settings-bold-duotone", label: "Settings", path: "/settings" },
   ];
 
   const renderListItem = (id, icon, label, path) => {

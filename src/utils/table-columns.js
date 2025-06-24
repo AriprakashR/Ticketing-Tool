@@ -1,5 +1,3 @@
-// utils/table-columns.js
-
 export const customerTableColumns = [
   {
     field: "custId",
@@ -97,5 +95,50 @@ export const machineTableColumns = [
     headerName: "Customer",
     sortable: false,
     width: 400,
+  },
+];
+
+export const employeeTableColumns = [
+  {
+    field: "empId",
+    headerName: "ID",
+    sortable: true,
+    width: 90,
+  },
+  {
+    field: "empCode",
+    headerName: "Employee Code",
+    sortable: true,
+    width: 180,
+  },
+  {
+    field: "empName",
+    headerName: "Employee",
+    sortable: true,
+    width: 200,
+  },
+  {
+    field: "designation",
+    headerName: "Designation",
+    sortable: true,
+    width: 200,
+  },
+  {
+    field: "locAssigned",
+    headerName: "Assigned Location",
+    sortable: false,
+    width: 220,
+  },
+  {
+    field: "empEmail",
+    headerName: "Email",
+    sortable: false,
+    width: 200,
+  },
+  {
+    field: "empPhNo",
+    headerName: "Mobile No",
+    sortable: false,
+    width: 200,
   },
 ];
