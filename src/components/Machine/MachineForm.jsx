@@ -17,17 +17,15 @@ const MachineForm = () => {
     wrntyStartDate: null,
     amcStartDate: null,
     amcEndDate: null,
-    mcnStatucCode: "",
+    mcnStatusCode: "",
     prdId: "",
     custId: "",
-    custBillAddId: "",
     custShipAddId: "",
   });
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState([]);
-  const [selectedCustomerBillingAddress, setSelectedCustomerBillingAddress] = useState({});
   const [selectedCustomerShippingAddress, setSelectedCustomerShippingAddress] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState([]);
   const [warrantyEndDate, setWarrantyEndDate] = useState(null);
@@ -46,39 +44,78 @@ const MachineForm = () => {
   }, []);
 
   useEffect(() => {
-    if (formData.wrntyStartDate && formData.wrntyPeriod) {
-      const startDate = new Date(formData.wrntyStartDate);
+    const { instlDate, wrntyPeriod } = formData;
+    if (instlDate && wrntyPeriod > 0) {
+      const startDate = new Date(instlDate);
       const endDate = new Date(startDate);
-      endDate.setFullYear(startDate.getFullYear() + Number(formData.wrntyPeriod));
+      endDate.setFullYear(endDate.getFullYear() + Number(wrntyPeriod));
+      endDate.setDate(endDate.getDate() - 1); // Subtract 1 day to end warranty a day before
+
+      setFormData((prev) => ({
+        ...prev,
+        wrntyStartDate: startDate,
+      }));
       setWarrantyEndDate(endDate);
     } else {
       setWarrantyEndDate(null);
     }
-  }, [formData.wrntyStartDate, formData.wrntyPeriod]);
+  }, [formData.instlDate, formData.wrntyPeriod]);
+
+  useEffect(() => {
+    if (formData.mcnStatusCode === "80" || formData.mcnStatusCode === 80) return; // Don't override if in AMC
+
+    if (formData.wrntyStartDate && warrantyEndDate) {
+      const today = new Date();
+
+      if (warrantyEndDate >= today) {
+        // In Warranty
+        setFormData((prev) => ({
+          ...prev,
+          mcnStatusCode: 70,
+          amcStartDate: null,
+          amcEndDate: null,
+        }));
+        setErrors((prev) => {
+          const errors = { ...prev };
+          delete errors.mcnStatusCode;
+          delete errors.amcStartDate;
+          delete errors.amcEndDate;
+          return errors;
+        });
+      } else {
+        // Out of Warranty
+        setFormData((prev) => ({
+          ...prev,
+          mcnStatusCode: 71,
+          amcStartDate: null,
+          amcEndDate: null,
+        }));
+        setErrors((prev) => {
+          const errors = { ...prev };
+          delete errors.mcnStatusCode;
+          delete errors.amcStartDate;
+          delete errors.amcEndDate;
+          return errors;
+        });
+      }
+    }
+  }, [formData.wrntyStartDate, warrantyEndDate]);
 
   const handleCustomerSelection = async (selectedCust) => {
     try {
       if (!selectedCust?.custId) return;
 
       const response = await getSpecficCustomerDetails(selectedCust.custId);
-      const billingAddress = response?.data?.customerBillingAddress || {};
+
       const shippingAddress = response?.data?.customerShippingAddress || [];
 
       setFormData((prev) => ({
         ...prev,
         custId: selectedCust.custId.toString(),
-        custBillAddId: billingAddress.custBillAddId || "",
         custShipAddId: shippingAddress.custShipAddId || "",
       }));
 
-      setSelectedCustomerBillingAddress(billingAddress);
       setSelectedCustomerShippingAddress(shippingAddress);
-
-      setErrors((prev) => {
-        const errors = { ...prev };
-        delete errors.custBillAddId;
-        return errors;
-      });
     } catch (error) {
       console.error("Failed to fetch customer details", error);
     }
@@ -98,6 +135,42 @@ const MachineForm = () => {
       if (selectedCust) {
         setFormData((prev) => ({ ...prev, custId: value }));
         await handleCustomerSelection(selectedCust);
+      }
+    } else if (name === "mcnStatusCode") {
+      if (value === "80" || value === 80) {
+        // In AMC manually selected
+        setFormData((prev) => ({
+          ...prev,
+          mcnStatusCode: value,
+          instlDate: null,
+          wrntyPeriod: 0,
+          wrntyStartDate: null,
+          amcStartDate: null,
+          amcEndDate: null,
+        }));
+        setWarrantyEndDate(null);
+      } else if (value === "70" || value === 70) {
+        // Manually selected In Warranty
+        setFormData((prev) => ({
+          ...prev,
+          mcnStatusCode: value,
+          amcStartDate: null,
+          amcEndDate: null,
+        }));
+        setErrors((prev) => {
+          const errors = { ...prev };
+          delete errors.amcStartDate;
+          delete errors.amcEndDate;
+          return errors;
+        });
+      } else {
+        setFormData((prev) => ({ ...prev, mcnStatusCode: value, amcStartDate: null, amcEndDate: null }));
+        setErrors((prev) => {
+          const errors = { ...prev };
+          delete errors.amcStartDate;
+          delete errors.amcEndDate;
+          return errors;
+        });
       }
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -138,7 +211,7 @@ const MachineForm = () => {
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             {/* Customer Selector */}
-            <Grid size={{ xs: 12, sm: 4 }}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Autocomplete
                 fullWidth
                 options={selectedCustomer}
@@ -154,7 +227,6 @@ const MachineForm = () => {
                     handleCustomerSelection(value);
                   } else {
                     setFormData((prev) => ({ ...prev, custId: "" }));
-                    setSelectedCustomerBillingAddress({});
                     setSelectedCustomerShippingAddress([]);
                   }
                 }}
@@ -170,36 +242,14 @@ const MachineForm = () => {
                 popupIcon={<KeyboardArrowDownRoundedIcon fontSize="24px" />}
               />
             </Grid>
-
-            {/* Billing Address */}
-            <Grid size={{ xs: 12, sm: 4 }}>
-              <TextField
-                name="custBillAddId"
-                label="Billing Address"
-                fullWidth
-                value={
-                  selectedCustomerBillingAddress?.custBillAddId
-                    ? `${selectedCustomerBillingAddress?.custBAdd1 || ""}, ${
-                        selectedCustomerBillingAddress?.custBAdd2 || ""
-                      }, ${selectedCustomerBillingAddress?.custBCity || ""}, ${
-                        selectedCustomerBillingAddress?.custBState || ""
-                      } - ${selectedCustomerBillingAddress?.custBPcode || ""}`
-                    : ""
-                }
-                InputProps={{ readOnly: true }}
-                error={!!errors.custBillAddId}
-                helperText={errors.custBillAddId}
-              />
-            </Grid>
-
             {/* Shipping Address */}
-            <Grid size={{ xs: 12, sm: 4 }}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 select
                 id="shipping-address-select-label"
                 name="custShipAddId"
-                label="Shipping Address"
+                label="Machine Location"
                 value={formData.custShipAddId}
                 onChange={handleChange}
                 error={!!errors.custShipAddId}
@@ -282,6 +332,7 @@ const MachineForm = () => {
                   });
                 }}
                 slotProps={{ textField: { fullWidth: true, error: !!errors.instlDate, helperText: errors.instlDate } }}
+                disabled={formData.mcnStatusCode === 80 || formData.mcnStatusCode === "80"}
               />
             </Grid>
 
@@ -295,6 +346,7 @@ const MachineForm = () => {
                 onChange={handleChange}
                 error={!!errors.wrntyPeriod}
                 helperText={errors.wrntyPeriod}
+                disabled={formData.mcnStatusCode === 80 || formData.mcnStatusCode === "80"}
               />
             </Grid>
 
@@ -312,8 +364,10 @@ const MachineForm = () => {
                   });
                 }}
                 slotProps={{
-                  textField: { fullWidth: true, error: !!errors.wrntyStartDate, helperText: errors.wrntyStartDate },
+                  textField: { fullWidth: true },
                 }}
+                readOnly
+                disabled={formData.mcnStatusCode === 80 || formData.mcnStatusCode === "80"}
               />
             </Grid>
 
@@ -323,8 +377,8 @@ const MachineForm = () => {
                 label="Warranty End Date"
                 value={warrantyEndDate}
                 readOnly
-                disabled
                 slotProps={{ textField: { fullWidth: true } }}
+                disabled={formData.mcnStatusCode === 80 || formData.mcnStatusCode === "80"}
               />
             </Grid>
 
@@ -334,16 +388,22 @@ const MachineForm = () => {
                 fullWidth
                 select
                 id="mcn-status-label"
-                name="mcnStatucCode"
+                name="mcnStatusCode"
                 label="Machine Status"
-                value={formData.mcnStatucCode}
+                value={formData.mcnStatusCode}
                 onChange={handleChange}
-                error={!!errors.mcnStatucCode}
-                helperText={errors.mcnStatucCode}
+                error={!!errors.mcnStatusCode}
+                helperText={errors.mcnStatusCode}
               >
-                <MenuItem value={70}>In Warranty</MenuItem>
-                <MenuItem value={71}>Out of Warranty</MenuItem>
-                <MenuItem value={80}>In AMC</MenuItem>
+                <MenuItem value={70} disabled={formData.mcnStatusCode !== 70}>
+                  In Warranty
+                </MenuItem>
+                <MenuItem value={71} disabled={formData.mcnStatusCode === 70}>
+                  Out of Warranty
+                </MenuItem>
+                <MenuItem value={80} disabled={formData.mcnStatusCode === 70}>
+                  In AMC
+                </MenuItem>
               </TextField>
             </Grid>
 
@@ -363,6 +423,7 @@ const MachineForm = () => {
                 slotProps={{
                   textField: { fullWidth: true, error: !!errors.amcStartDate, helperText: errors.amcStartDate },
                 }}
+                disabled={formData.mcnStatusCode !== "80" && formData.mcnStatusCode !== 80}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 4 }}>
@@ -380,6 +441,7 @@ const MachineForm = () => {
                 slotProps={{
                   textField: { fullWidth: true, error: !!errors.amcEndDate, helperText: errors.amcEndDate },
                 }}
+                disabled={formData.mcnStatusCode !== "80" && formData.mcnStatusCode !== 80}
               />
             </Grid>
 

@@ -43,18 +43,30 @@ export const validateProductForm = (formData) => {
 export const validateMachineForm = (formData) => {
   const errors = {};
 
-  if (!formData.custId.trim()) errors.custId = "Customer is required.";
-  if (!formData.custBillAddId) errors.custBillAddId = "Billing Address is required.";
-  if (!formData.custShipAddId) errors.custShipAddId = "Shipping Address is required.";
+  const isAMC = formData.mcnStatusCode === "80" || formData.mcnStatusCode === 80;
+
+  if (!formData.custId?.trim()) errors.custId = "Customer is required.";
+  if (!formData.custShipAddId) errors.custShipAddId = "Machine Location is required.";
   if (!formData.prdId) errors.prdId = "Product is required.";
-  if (!formData.mcnSno.trim()) errors.mcnSno = "Serial Number is required.";
-  if (!formData.instlDate) errors.instlDate = "Installation Date is required.";
-  if (!formData.wrntyPeriod || isNaN(formData.wrntyPeriod) || formData.wrntyPeriod <= 0)
-    errors.wrntyPeriod = "Valid Warranty Period is required.";
-  if (!formData.wrntyStartDate) errors.wrntyStartDate = "Warranty Start Date is required.";
-  if (!formData.mcnStatucCode) errors.mcnStatucCode = "Machine Status is required.";
-  if (!formData.amcStartDate) errors.amcStartDate = "AMC Start is required.";
-  if (!formData.amcEndDate) errors.amcEndDate = "AMC End Date is required.";
+  if (!formData.mcnSno?.trim()) errors.mcnSno = "Serial Number is required.";
+  if (!formData.mcnStatusCode) errors.mcnStatusCode = "Machine Status is required.";
+
+  if (isAMC) {
+    // Validate AMC-related fields only
+    if (!formData.amcStartDate) errors.amcStartDate = "AMC Start Date is required.";
+    if (!formData.amcEndDate) errors.amcEndDate = "AMC End Date is required.";
+  } else {
+    // Validate Warranty-related fields only
+    if (!formData.instlDate) errors.instlDate = "Installation Date is required.";
+    if (
+      formData.wrntyPeriod === undefined ||
+      formData.wrntyPeriod === null ||
+      isNaN(formData.wrntyPeriod) ||
+      Number(formData.wrntyPeriod) <= 0
+    ) {
+      errors.wrntyPeriod = "Valid Warranty Period is required.";
+    }
+  }
 
   return errors;
 };
