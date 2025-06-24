@@ -47,69 +47,73 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     return (
       <ListItem sx={{ display: "block", py: 0.25 }}>
         <NavLink to={path} style={{ textDecoration: "none", color: "inherit" }}>
-          {({ isActive }) => (
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                flexDirection: collapsed && isMonitor ? "column" : "row",
-                justifyContent: collapsed && isMonitor ? "center" : "flex-start",
-                transition: "all 0.3s ease",
-                borderRadius: 1.5,
-                mx: collapsed ? -1.5 : 0,
-                backgroundColor: isActive ? (theme.palette.mode === "dark" ? "#1D242B" : "#F6F7F8") : "transparent",
-                "&:hover": {
-                  backgroundColor: theme.palette.mode === "dark" ? "#1D242B" : "#F6F7F8",
-                },
-              }}
-            >
-              <ListItemIcon
+          {({ isActive }) => {
+            const isDarkMode = theme.palette.mode === "dark";
+            const activeColor = isDarkMode ? "#6BB1F8" : "#0C68E9";
+            const defaultColor = isDarkMode ? "#919EAB" : "#637381";
+            const activeBg = isDarkMode ? "#132030" : "#E2EBF7";
+            const activeHoverBg = isDarkMode ? "#132741" : "#CFDFF5";
+            const inactiveHoverBg = isDarkMode ? "#1D242B" : "#F6F7F8";
+
+            return (
+              <ListItemButton
                 sx={{
-                  minWidth: "auto",
-                  display: "flex",
-                  mr: collapsed && isMonitor ? 0 : 1.5,
-                  mb: collapsed && isMonitor ? 0.5 : 0,
+                  minHeight: 48,
+                  flexDirection: collapsed && isMonitor ? "column" : "row",
+                  justifyContent: collapsed && isMonitor ? "center" : "flex-start",
+                  transition: "all 0.3s ease",
+                  borderRadius: 1.5,
+                  mx: collapsed ? -1.5 : 0,
+                  backgroundColor: isActive ? activeBg : "transparent",
+                  "&:hover": {
+                    backgroundColor: isActive ? activeHoverBg : inactiveHoverBg,
+                  },
                 }}
               >
-                <Icon
-                  icon={icon}
-                  width={20}
-                  height={20}
-                  color={theme.palette.mode === "dark" ? "#919EAB" : "#637381"}
-                />
-              </ListItemIcon>
-              {collapsed && isMonitor ? (
-                <Box
-                  component="span"
+                <ListItemIcon
                   sx={{
-                    fontSize: 10,
-                    fontWeight: 600,
-                    lineHeight: "16px",
-                    mt: 0.5,
-                    whiteSpace: "nowrap",
-                    textAlign: "center",
-                    color: (theme) => (theme.palette.mode === "dark" ? "#919EAB" : "#637381"),
+                    minWidth: "auto",
+                    display: "flex",
+                    mr: collapsed && isMonitor ? 0 : 1.5,
+                    mb: collapsed && isMonitor ? 0.5 : 0,
                   }}
                 >
-                  {label}
-                </Box>
-              ) : (
-                <ListItemText
-                  primary={label}
-                  primaryTypographyProps={{
-                    fontWeight: 500,
-                    fontSize: 14,
-                    lineHeight: 1.57,
-                  }}
-                  sx={{
-                    opacity: collapsed && isMonitor ? 0 : 1,
-                    transform: collapsed && isMonitor ? "translateX(-10px)" : "none",
-                    transition: "opacity 0.3s ease, transform 0.3s ease",
-                    color: (theme) => (theme.palette.mode === "dark" ? "#919EAB" : "#637381"),
-                  }}
-                />
-              )}
-            </ListItemButton>
-          )}
+                  <Icon icon={icon} width={20} height={20} color={isActive ? activeColor : defaultColor} />
+                </ListItemIcon>
+                {collapsed && isMonitor ? (
+                  <Box
+                    component="span"
+                    sx={{
+                      fontSize: 10,
+                      fontWeight: 600,
+                      lineHeight: "16px",
+                      mt: 0.5,
+                      whiteSpace: "nowrap",
+                      textAlign: "center",
+                      color: isActive ? activeColor : defaultColor,
+                    }}
+                  >
+                    {label}
+                  </Box>
+                ) : (
+                  <ListItemText
+                    primary={label}
+                    primaryTypographyProps={{
+                      fontWeight: 500,
+                      fontSize: 14,
+                      lineHeight: 1.57,
+                    }}
+                    sx={{
+                      opacity: collapsed && isMonitor ? 0 : 1,
+                      transform: collapsed && isMonitor ? "translateX(-10px)" : "none",
+                      transition: "opacity 0.3s ease, transform 0.3s ease",
+                      color: isActive ? activeColor : defaultColor,
+                    }}
+                  />
+                )}
+              </ListItemButton>
+            );
+          }}
         </NavLink>
       </ListItem>
     );
