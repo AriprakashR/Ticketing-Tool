@@ -15,6 +15,7 @@ const MachineForm = () => {
     wrntyPeriod: 0,
     instlDate: null,
     wrntyStartDate: null,
+    wrntyEndDate: null,
     amcStartDate: null,
     amcEndDate: null,
     mcnStatusCode: "",
@@ -28,7 +29,14 @@ const MachineForm = () => {
   const [selectedCustomer, setSelectedCustomer] = useState([]);
   const [selectedCustomerShippingAddress, setSelectedCustomerShippingAddress] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState([]);
-  const [warrantyEndDate, setWarrantyEndDate] = useState(null);
+
+  const clearErrors = (fields) => {
+    setErrors((prev) => {
+      const updated = { ...prev };
+      fields.forEach((field) => delete updated[field]);
+      return updated;
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,25 +57,23 @@ const MachineForm = () => {
       const startDate = new Date(instlDate);
       const endDate = new Date(startDate);
       endDate.setFullYear(endDate.getFullYear() + Number(wrntyPeriod));
-      endDate.setDate(endDate.getDate() - 1); // Subtract 1 day to end warranty a day before
+      endDate.setDate(endDate.getDate() - 1);
 
       setFormData((prev) => ({
         ...prev,
         wrntyStartDate: startDate,
+        wrntyEndDate: endDate,
       }));
-      setWarrantyEndDate(endDate);
-    } else {
-      setWarrantyEndDate(null);
     }
   }, [formData.instlDate, formData.wrntyPeriod]);
 
   useEffect(() => {
-    if (formData.mcnStatusCode === "80" || formData.mcnStatusCode === 80) return; // Don't override if in AMC
+    if (formData.mcnStatusCode === "80" || formData.mcnStatusCode === 80) return;
 
-    if (formData.wrntyStartDate && warrantyEndDate) {
+    if (formData.wrntyStartDate && formData.wrntyEndDate) {
       const today = new Date();
 
-      if (warrantyEndDate >= today) {
+      if (formData.wrntyEndDate >= today) {
         // In Warranty
         setFormData((prev) => ({
           ...prev,
@@ -75,13 +81,7 @@ const MachineForm = () => {
           amcStartDate: null,
           amcEndDate: null,
         }));
-        setErrors((prev) => {
-          const errors = { ...prev };
-          delete errors.mcnStatusCode;
-          delete errors.amcStartDate;
-          delete errors.amcEndDate;
-          return errors;
-        });
+        clearErrors(["mcnStatusCode", "amcStartDate", "amcEndDate"]);
       } else {
         // Out of Warranty
         setFormData((prev) => ({
@@ -90,23 +90,15 @@ const MachineForm = () => {
           amcStartDate: null,
           amcEndDate: null,
         }));
-        setErrors((prev) => {
-          const errors = { ...prev };
-          delete errors.mcnStatusCode;
-          delete errors.amcStartDate;
-          delete errors.amcEndDate;
-          return errors;
-        });
+        clearErrors(["mcnStatusCode", "amcStartDate", "amcEndDate"]);
       }
     }
-  }, [formData.wrntyStartDate, warrantyEndDate]);
+  }, [formData.wrntyStartDate, formData.wrntyEndDate]);
 
   const handleCustomerSelection = async (selectedCust) => {
     try {
       if (!selectedCust?.custId) return;
-
       const response = await getSpecficCustomerDetails(selectedCust.custId);
-
       const shippingAddress = response?.data?.customerShippingAddress || [];
 
       setFormData((prev) => ({
@@ -123,12 +115,7 @@ const MachineForm = () => {
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
-
-    setErrors((prevErrors) => {
-      const errors = { ...prevErrors };
-      delete errors[name];
-      return errors;
-    });
+    clearErrors([name]);
 
     if (name === "custId") {
       const selectedCust = selectedCustomer.find((customer) => customer?.custId?.toString() === value);
@@ -145,10 +132,10 @@ const MachineForm = () => {
           instlDate: null,
           wrntyPeriod: 0,
           wrntyStartDate: null,
+          wrntyEndDate: null,
           amcStartDate: null,
           amcEndDate: null,
         }));
-        setWarrantyEndDate(null);
       } else if (value === "70" || value === 70) {
         // Manually selected In Warranty
         setFormData((prev) => ({
@@ -157,20 +144,10 @@ const MachineForm = () => {
           amcStartDate: null,
           amcEndDate: null,
         }));
-        setErrors((prev) => {
-          const errors = { ...prev };
-          delete errors.amcStartDate;
-          delete errors.amcEndDate;
-          return errors;
-        });
+        clearErrors(["amcStartDate", "amcEndDate"]);
       } else {
         setFormData((prev) => ({ ...prev, mcnStatusCode: value, amcStartDate: null, amcEndDate: null }));
-        setErrors((prev) => {
-          const errors = { ...prev };
-          delete errors.amcStartDate;
-          delete errors.amcEndDate;
-          return errors;
-        });
+        clearErrors(["amcStartDate", "amcEndDate"]);
       }
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -219,11 +196,7 @@ const MachineForm = () => {
                 onChange={(event, value) => {
                   if (value) {
                     setFormData((prev) => ({ ...prev, custId: value?.custId || "" }));
-                    setErrors((prev) => {
-                      const errors = { ...prev };
-                      delete errors.custId;
-                      return errors;
-                    });
+                    clearErrors(["custId"]);
                     handleCustomerSelection(value);
                   } else {
                     setFormData((prev) => ({ ...prev, custId: "" }));
@@ -271,11 +244,7 @@ const MachineForm = () => {
                 getOptionLabel={(option) => option?.prdName || ""}
                 onChange={(event, value) => {
                   setFormData((prev) => ({ ...prev, prdId: value?.prdId || "" }));
-                  setErrors((prev) => {
-                    const errors = { ...prev };
-                    delete errors.prdId;
-                    return errors;
-                  });
+                  clearErrors(["prdId"]);
                 }}
                 renderOption={(props, option) => (
                   <li {...props} key={option.prdId}>
@@ -325,11 +294,7 @@ const MachineForm = () => {
                 value={formData.instlDate}
                 onChange={(newValue) => {
                   setFormData((prev) => ({ ...prev, instlDate: newValue }));
-                  setErrors((prev) => {
-                    const errors = { ...prev };
-                    delete errors.instlDate;
-                    return errors;
-                  });
+                  clearErrors(["instlDate"]);
                 }}
                 slotProps={{ textField: { fullWidth: true, error: !!errors.instlDate, helperText: errors.instlDate } }}
                 disabled={formData.mcnStatusCode === 80 || formData.mcnStatusCode === "80"}
@@ -357,11 +322,7 @@ const MachineForm = () => {
                 value={formData.wrntyStartDate}
                 onChange={(newValue) => {
                   setFormData((prev) => ({ ...prev, wrntyStartDate: newValue }));
-                  setErrors((prev) => {
-                    const errors = { ...prev };
-                    delete errors.wrntyStartDate;
-                    return errors;
-                  });
+                  clearErrors(["wrntyStartDate"]);
                 }}
                 slotProps={{
                   textField: { fullWidth: true },
@@ -375,7 +336,7 @@ const MachineForm = () => {
             <Grid size={{ xs: 12, sm: 4 }}>
               <DatePicker
                 label="Warranty End Date"
-                value={warrantyEndDate}
+                value={formData.wrntyEndDate}
                 readOnly
                 slotProps={{ textField: { fullWidth: true } }}
                 disabled={formData.mcnStatusCode === 80 || formData.mcnStatusCode === "80"}
@@ -414,11 +375,7 @@ const MachineForm = () => {
                 value={formData.amcStartDate}
                 onChange={(newValue) => {
                   setFormData((prev) => ({ ...prev, amcStartDate: newValue }));
-                  setErrors((prev) => {
-                    const errors = { ...prev };
-                    delete errors.amcStartDate;
-                    return errors;
-                  });
+                  clearErrors(["amcStartDate"]);
                 }}
                 slotProps={{
                   textField: { fullWidth: true, error: !!errors.amcStartDate, helperText: errors.amcStartDate },
@@ -432,11 +389,7 @@ const MachineForm = () => {
                 value={formData.amcEndDate}
                 onChange={(newValue) => {
                   setFormData((prev) => ({ ...prev, amcEndDate: newValue }));
-                  setErrors((prev) => {
-                    const errors = { ...prev };
-                    delete errors.amcEndDate;
-                    return errors;
-                  });
+                  clearErrors(["amcEndDate"]);
                 }}
                 slotProps={{
                   textField: { fullWidth: true, error: !!errors.amcEndDate, helperText: errors.amcEndDate },
