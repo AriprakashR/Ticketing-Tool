@@ -3,7 +3,7 @@ export const customerTableColumns = [
     field: "custId",
     headerName: "ID",
     sortable: true,
-    width: 90,
+    width: 86,
   },
   {
     field: "custName",
@@ -36,7 +36,7 @@ export const productTableColumns = [
     field: "prdId",
     headerName: "ID",
     sortable: true,
-    width: 100,
+    width: 86,
   },
   {
     field: "prdCode",
@@ -69,7 +69,7 @@ export const machineTableColumns = [
     field: "mcnId",
     headerName: "ID",
     sortable: true,
-    width: 100,
+    width: 86,
   },
   {
     field: "mcnCode",
@@ -103,7 +103,7 @@ export const employeeTableColumns = [
     field: "empId",
     headerName: "ID",
     sortable: true,
-    width: 90,
+    width: 86,
   },
   {
     field: "empCode",
