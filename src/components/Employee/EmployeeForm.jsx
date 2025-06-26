@@ -14,6 +14,7 @@ import {
 import { useState, useEffect } from "react";
 import { getEmployeeDesignationList } from "../../api/employee-service";
 import { getRegionalDetailsList, getBranchListByRegionalId } from "../../api/regional-service";
+import { getLocationListByBranchId } from "../../api/branch-service";
 
 const EmployeeForm = () => {
   const [formData, setFormData] = useState({
@@ -34,14 +35,15 @@ const EmployeeForm = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
-  const [selectedDesignation, setSelectedDesignation] = useState([]);
-  const [selectedRegion, setSelectedRegion] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState([]);
+  const [designationList, setDesignationList] = useState([]);
+  const [regionList, setRegionList] = useState([]);
+  const [branchList, setBranchList] = useState([]);
+  const [locationList, setLocationList] = useState([]);
 
   const fetchPincodeDetails = async (pincode, type) => {
     try {
-      const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
-      const data = await response.json();
+      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const data = await res.json();
 
       if (data?.[0]?.Status === "Success") {
         const postOffices = data[0].PostOffice;
@@ -51,8 +53,8 @@ const EmployeeForm = () => {
         setCityOptions(cities);
         setFormData((prev) => ({ ...prev, state: state, city: "" }));
       }
-    } catch (error) {
-      console.error("Error fetching pincode:", error);
+    } catch (err) {
+      console.error("Error fetching pincode:", err);
       toast.error("Failed to fetch pincode details.");
     }
   };
@@ -60,17 +62,14 @@ const EmployeeForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [RegionRes, DesignationRes] = await Promise.all([
-          getRegionalDetailsList(),
-          getEmployeeDesignationList(),
-          getBranchListByRegionalId(),
-        ]);
-        setSelectedRegion(RegionRes?.data || []);
-        setSelectedDesignation(DesignationRes?.data || []);
-      } catch (error) {
-        console.error(error);
+        const [regions, designations] = await Promise.all([getRegionalDetailsList(), getEmployeeDesignationList()]);
+        setRegionList(regions?.data || []);
+        setDesignationList(designations?.data || []);
+      } catch (err) {
+        console.error("Initial data fetch failed", err);
       }
     };
+
     fetchData();
   }, []);
 
@@ -79,34 +78,44 @@ const EmployeeForm = () => {
       if (!formData.regionalId) return;
       try {
         const res = await getBranchListByRegionalId(formData.regionalId);
-        setSelectedBranch(res?.data || []);
-      } catch (error) {
-        console.error("Failed to fetch branch list:", error);
+        setBranchList(res?.data || []);
+      } catch (err) {
+        console.error("Failed to fetch branch list:", err);
       }
     };
 
     fetchBranchList();
   }, [formData.regionalId]);
 
+  useEffect(() => {
+    const fetchLocationList = async () => {
+      if (!formData.branchId) return;
+      try {
+        const res = await getLocationListByBranchId(formData.branchId);
+        setLocationList(res?.data || []);
+      } catch (err) {
+        console.error("Failed to fetch location list:", err);
+      }
+    };
+
+    fetchLocationList();
+  }, [formData.branchId]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (name === "pincode" && value.length === 6) fetchPincodeDetails(value, "city");
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "regionalId" ? { branchId: "", locId: "" } : {}),
+      ...(name === "branchId" ? { locId: "" } : {}),
+    }));
+    if (name === "pincode" && value.length === 6) fetchPincodeDetails(value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Submitted:", formData);
   };
-
-  const locationOptions = [
-    { id: "1", name: "North Banglore" },
-    { id: "2", name: "South Banglore" },
-    { id: "3", name: "East Banglore" },
-    { id: "4", name: "West Banglore" },
-    { id: "5", name: "Central Banglore" },
-    { id: "6", name: "Head Office" },
-  ];
 
   return (
     <Card sx={{ maxWidth: 1000, mx: "auto", mt: 4, padding: 2 }}>
@@ -154,7 +163,7 @@ const EmployeeForm = () => {
                 value={formData.empDesgId}
                 onChange={handleChange}
               >
-                {selectedDesignation?.map((desgn) => (
+                {designationList?.map((desgn) => (
                   <MenuItem key={desgn.empDesgId} value={desgn.empDesgId}>
                     {desgn.designation}
                   </MenuItem>
@@ -171,7 +180,7 @@ const EmployeeForm = () => {
                 value={formData.regionalId}
                 onChange={handleChange}
               >
-                {selectedRegion?.map((reg) => (
+                {regionList?.map((reg) => (
                   <MenuItem key={reg.regionalId} value={reg.regionalId}>
                     {reg.regionalName}
                   </MenuItem>
@@ -188,7 +197,7 @@ const EmployeeForm = () => {
                 value={formData.branchId}
                 onChange={handleChange}
               >
-                {selectedBranch.map((branch) => (
+                {branchList.map((branch) => (
                   <MenuItem key={branch.branchId} value={branch.branchId}>
                     {branch.branchName}
                   </MenuItem>
@@ -205,9 +214,9 @@ const EmployeeForm = () => {
                 value={formData.locId}
                 onChange={handleChange}
               >
-                {locationOptions.map((loc) => (
-                  <MenuItem key={loc.id} value={loc.id}>
-                    {loc.name}
+                {locationList.map((loc) => (
+                  <MenuItem key={loc.locId} value={loc.locId}>
+                    {loc.locAssigned}
                   </MenuItem>
                 ))}
               </TextField>

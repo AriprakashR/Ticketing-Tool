@@ -19,6 +19,6 @@ export const getBranchListByRegionalId = async (regionalId) => {
     return response;
   } catch (error) {
     console.log(error.response);
-    toast.error(error.response?.data?.msg || "Failed to get regional list");
+    toast.error(error.response?.data?.msg || "Failed to get branch list");
   }
 };
