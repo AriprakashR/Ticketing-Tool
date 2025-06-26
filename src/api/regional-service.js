@@ -11,3 +11,14 @@ export const getRegionalDetailsList = async () => {
     toast.error(error.response?.data?.msg || "Failed to get regional list");
   }
 };
+
+export const getBranchListByRegionalId = async (regionalId) => {
+  try {
+    const response = await instance.get(`regional/getBranchDetailsListByRegionalId/${regionalId}`);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log(error.response);
+    toast.error(error.response?.data?.msg || "Failed to get regional list");
+  }
+};

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { getEmployeeDesignationList } from "../../api/employee-service";
-import { getRegionalDetailsList } from "../../api/regional-service";
+import { getRegionalDetailsList, getBranchListByRegionalId } from "../../api/regional-service";
 
 const EmployeeForm = () => {
   const [formData, setFormData] = useState({
@@ -36,7 +36,7 @@ const EmployeeForm = () => {
   const [cityOptions, setCityOptions] = useState([]);
   const [selectedDesignation, setSelectedDesignation] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
-  const [selectedBranch, setSelectedBranche] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState([]);
 
   const fetchPincodeDetails = async (pincode, type) => {
     try {
@@ -60,7 +60,11 @@ const EmployeeForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [RegionRes, DesignationRes] = await Promise.all([getRegionalDetailsList(), getEmployeeDesignationList()]);
+        const [RegionRes, DesignationRes] = await Promise.all([
+          getRegionalDetailsList(),
+          getEmployeeDesignationList(),
+          getBranchListByRegionalId(),
+        ]);
         setSelectedRegion(RegionRes?.data || []);
         setSelectedDesignation(DesignationRes?.data || []);
       } catch (error) {
@@ -69,6 +73,20 @@ const EmployeeForm = () => {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchBranchList = async () => {
+      if (!formData.regionalId) return;
+      try {
+        const res = await getBranchListByRegionalId(formData.regionalId);
+        setSelectedBranch(res?.data || []);
+      } catch (error) {
+        console.error("Failed to fetch branch list:", error);
+      }
+    };
+
+    fetchBranchList();
+  }, [formData.regionalId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,11 +98,6 @@ const EmployeeForm = () => {
     e.preventDefault();
     console.log("Submitted:", formData);
   };
-
-  const branchOptions = [
-    { id: "1", name: "Chennai" },
-    { id: "2", name: "Banglore" },
-  ];
 
   const locationOptions = [
     { id: "1", name: "North Banglore" },
@@ -175,9 +188,9 @@ const EmployeeForm = () => {
                 value={formData.branchId}
                 onChange={handleChange}
               >
-                {branchOptions.map((branch) => (
-                  <MenuItem key={branch.id} value={branch.id}>
-                    {branch.name}
+                {selectedBranch.map((branch) => (
+                  <MenuItem key={branch.branchId} value={branch.branchId}>
+                    {branch.branchName}
                   </MenuItem>
                 ))}
               </TextField>
