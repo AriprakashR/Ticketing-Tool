@@ -11,7 +11,9 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getEmployeeDesignationList } from "../../api/employee-service";
+import { getRegionalDetailsList } from "../../api/regional-service";
 
 const EmployeeForm = () => {
   const [formData, setFormData] = useState({
@@ -32,6 +34,9 @@ const EmployeeForm = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
+  const [selectedDesignation, setSelectedDesignation] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState([]);
+  const [selectedBranch, setSelectedBranche] = useState([]);
 
   const fetchPincodeDetails = async (pincode, type) => {
     try {
@@ -52,6 +57,19 @@ const EmployeeForm = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [RegionRes, DesignationRes] = await Promise.all([getRegionalDetailsList(), getEmployeeDesignationList()]);
+        setSelectedRegion(RegionRes?.data || []);
+        setSelectedDesignation(DesignationRes?.data || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -62,19 +80,6 @@ const EmployeeForm = () => {
     e.preventDefault();
     console.log("Submitted:", formData);
   };
-
-  // Sample data for Employee Designation & Location
-  const designationOptions = [
-    { id: "Emp1001", name: "Regional Manager" },
-    { id: "Emp1002", name: "Branch Manager" },
-    { id: "Emp1003", name: "Service Engineer" },
-    { id: "Emp1004", name: "Admin" },
-  ];
-
-  const regionOptions = [
-    { id: "1", name: "Tamilnadu" },
-    { id: "2", name: "Karnataka" },
-  ];
 
   const branchOptions = [
     { id: "1", name: "Chennai" },
@@ -136,9 +141,9 @@ const EmployeeForm = () => {
                 value={formData.empDesgId}
                 onChange={handleChange}
               >
-                {designationOptions.map((desgn) => (
-                  <MenuItem key={desgn.id} value={desgn.id}>
-                    {desgn.name}
+                {selectedDesignation?.map((desgn) => (
+                  <MenuItem key={desgn.empDesgId} value={desgn.empDesgId}>
+                    {desgn.designation}
                   </MenuItem>
                 ))}
               </TextField>
@@ -153,9 +158,9 @@ const EmployeeForm = () => {
                 value={formData.regionalId}
                 onChange={handleChange}
               >
-                {regionOptions.map((region) => (
-                  <MenuItem key={region.id} value={region.id}>
-                    {region.name}
+                {selectedRegion?.map((reg) => (
+                  <MenuItem key={reg.regionalId} value={reg.regionalId}>
+                    {reg.regionalName}
                   </MenuItem>
                 ))}
               </TextField>

@@ -12,13 +12,13 @@ export const getEmployeeDetailsList = async () => {
   }
 };
 
-export const getBranchListByEmployeeDesignationId = async (empDesgId) => {
+export const getEmployeeDesignationList = async () => {
   try {
-    const response = await instance.get(`empDesignation/getListOfBranchDetailsByEmpDesgId/${empDesgId}`);
+    const response = await instance.get("empDesignation/getAllEmployeeDesignation");
     console.log(response);
     return response;
   } catch (error) {
     console.log(error.response?.data?.msg);
-    toast.error(error.response?.data?.msg || "Failed to get branch list");
+    toast.error(error.response?.data?.msg || "Failed to get designation list");
   }
 };
