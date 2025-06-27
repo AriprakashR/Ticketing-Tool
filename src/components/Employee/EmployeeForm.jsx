@@ -40,6 +40,8 @@ const EmployeeForm = () => {
   const [branchList, setBranchList] = useState([]);
   const [locationList, setLocationList] = useState([]);
 
+  const isManagerialDesg = [1, 2, 3].includes(Number(formData.empDesgId));
+
   const fetchPincodeDetails = async (pincode, type) => {
     try {
       const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
@@ -103,6 +105,17 @@ const EmployeeForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "empDesgId") {
+      const isManagerial = [1, 2, 3].includes(Number(value));
+      setFormData((prev) => ({
+        ...prev,
+        empDesgId: value,
+        regionalId: isManagerial ? prev.regionalId : "",
+        branchId: isManagerial ? prev.branchId : "",
+        locId: isManagerial ? "" : prev.locId,
+      }));
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -179,6 +192,7 @@ const EmployeeForm = () => {
                 label="Select Region"
                 value={formData.regionalId}
                 onChange={handleChange}
+                disabled={!isManagerialDesg}
               >
                 {regionList?.map((reg) => (
                   <MenuItem key={reg.regionalId} value={reg.regionalId}>
@@ -196,6 +210,7 @@ const EmployeeForm = () => {
                 label="Select Branch"
                 value={formData.branchId}
                 onChange={handleChange}
+                disabled={!isManagerialDesg}
               >
                 {branchList.map((branch) => (
                   <MenuItem key={branch.branchId} value={branch.branchId}>
@@ -213,6 +228,7 @@ const EmployeeForm = () => {
                 label="Select Location"
                 value={formData.locId}
                 onChange={handleChange}
+                disabled={isManagerialDesg}
               >
                 {locationList.map((loc) => (
                   <MenuItem key={loc.locId} value={loc.locId}>
