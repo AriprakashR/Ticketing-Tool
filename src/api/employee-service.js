@@ -1,6 +1,16 @@
 import instance from "./api";
 import { toast } from "../utils/toastService";
 
+export const postEmployeeDetails = async (data) => {
+  try {
+    const response = await instance.post("employee/createNewEmployee", data);
+    return response.data;
+  } catch (error) {
+    console.log(error.response?.data);
+    toast.error(error.response?.data?.msg || "Failed to submit employee details");
+  }
+};
+
 export const getEmployeeDetailsList = async () => {
   try {
     const response = await instance.get("employee/getCredentialsAndEmployeeDetailsList");

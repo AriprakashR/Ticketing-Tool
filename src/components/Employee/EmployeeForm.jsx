@@ -12,11 +12,14 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { getEmployeeDesignationList } from "../../api/employee-service";
+import { postEmployeeDetails, getEmployeeDesignationList } from "../../api/employee-service";
 import { getRegionalDetailsList, getBranchListByRegionalId } from "../../api/regional-service";
 import { getLocationListByBranchId } from "../../api/branch-service";
+import { toast } from "../../utils/toastService";
+import { useNavigate } from "react-router";
 
 const EmployeeForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     empDesgId: "",
     regionalId: "",
@@ -105,29 +108,46 @@ const EmployeeForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (name === "empDesgId") {
       const isManagerial = [1, 2, 3].includes(Number(value));
       setFormData((prev) => ({
         ...prev,
         empDesgId: value,
-        regionalId: isManagerial ? prev.regionalId : "",
-        branchId: isManagerial ? prev.branchId : "",
+        regionalId: "",
+        branchId: "",
         locId: isManagerial ? "" : prev.locId,
       }));
       return;
     }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
       ...(name === "regionalId" ? { branchId: "", locId: "" } : {}),
       ...(name === "branchId" ? { locId: "" } : {}),
     }));
-    if (name === "pincode" && value.length === 6) fetchPincodeDetails(value);
+
+    if (name === "pincode" && value.length === 6) {
+      fetchPincodeDetails(value);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted:", formData);
+    try {
+      setLoading(true);
+      const res = await postEmployeeDetails(formData);
+      if (res?.status === "OK") {
+        toast.success("Employee details added successfully");
+        navigate(-1);
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      toast.error("Error submitting the form.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -192,7 +212,6 @@ const EmployeeForm = () => {
                 label="Select Region"
                 value={formData.regionalId}
                 onChange={handleChange}
-                disabled={!isManagerialDesg}
               >
                 {regionList?.map((reg) => (
                   <MenuItem key={reg.regionalId} value={reg.regionalId}>
@@ -210,7 +229,6 @@ const EmployeeForm = () => {
                 label="Select Branch"
                 value={formData.branchId}
                 onChange={handleChange}
-                disabled={!isManagerialDesg}
               >
                 {branchList.map((branch) => (
                   <MenuItem key={branch.branchId} value={branch.branchId}>
