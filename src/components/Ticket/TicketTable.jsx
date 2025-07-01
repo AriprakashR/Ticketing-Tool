@@ -15,18 +15,19 @@ export default function TicketTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  useEffect(() => {
+    getTableData();
+  }, []);
+
   const getTableData = async () => {
     try {
       const response = await getTicketDetailsList();
+      console.log("Received data:", response.data.data);
       setTableData(response.data.data);
     } catch (error) {
       console.error("Error fetching Tickets:", error);
     }
   };
-
-  useEffect(() => {
-    getTableData();
-  }, []);
 
   const columns = [
     ...ticketTableColumns,

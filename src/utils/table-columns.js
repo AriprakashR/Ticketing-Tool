@@ -1,3 +1,5 @@
+import { formatDate } from "./date-format";
+
 export const customerTableColumns = [
   {
     field: "custId",
@@ -161,17 +163,19 @@ export const ticketTableColumns = [
     headerName: "Created On",
     sortable: true,
     width: 200,
+    renderCell: (params) => formatDate(params.row?.createdOn),
   },
   {
     field: "prblmDesc",
     headerName: "Problem Description",
-    sortable: true,
+    sortable: false,
     width: 620,
   },
   {
     field: "closedOn",
     headerName: "Closed On",
-    sortable: false,
+    sortable: true,
     width: 200,
+    renderCell: (params) => formatDate(params.row?.closedOn),
   },
 ];
