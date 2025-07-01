@@ -142,3 +142,36 @@ export const employeeTableColumns = [
     width: 200,
   },
 ];
+
+export const ticketTableColumns = [
+  {
+    field: "tktId",
+    headerName: "ID",
+    sortable: true,
+    width: 86,
+  },
+  {
+    field: "tktCode",
+    headerName: "Ticket Code",
+    sortable: true,
+    width: 180,
+  },
+  {
+    field: "createdOn",
+    headerName: "Created On",
+    sortable: true,
+    width: 200,
+  },
+  {
+    field: "prblmDesc",
+    headerName: "Problem Description",
+    sortable: true,
+    width: 620,
+  },
+  {
+    field: "closedOn",
+    headerName: "Closed On",
+    sortable: false,
+    width: 200,
+  },
+];

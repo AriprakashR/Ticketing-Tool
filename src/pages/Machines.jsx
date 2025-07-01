@@ -1,7 +1,7 @@
 import MachineTable from "../components/Machine/MachineTable";
 
-const Machine = () => {
+const Machines = () => {
   return <MachineTable />;
 };
 
-export default Machine;
+export default Machines;

@@ -11,8 +11,9 @@ import Employees from "../pages/Employees";
 import EmployeeForm from "../components/Employee/EmployeeForm";
 import Products from "../pages/Products";
 import ProductForm from "../components/Product/ProductForm";
-import Machine from "../pages/Machine";
+import Machines from "../pages/Machines";
 import MachineForm from "../components/Machine/MachineForm";
+import Tickets from "../pages/Tickets";
 
 export const routes = [
   {
@@ -37,8 +38,9 @@ export const routes = [
           { path: "/employees/add", element: <EmployeeForm /> },
           { path: "/products", element: <Products /> },
           { path: "/products/add", element: <ProductForm /> },
-          { path: "/machines", element: <Machine /> },
+          { path: "/machines", element: <Machines /> },
           { path: "/machines/add", element: <MachineForm /> },
+          { path: "/tickets", element: <Tickets /> },
         ],
       },
     ],
