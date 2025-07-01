@@ -70,3 +70,19 @@ export const validateMachineForm = (formData) => {
 
   return errors;
 };
+
+export const validateTicketForm = (formData) => {
+  const errors = {};
+
+  if (!formData.custId) errors.custId = "Customer Phone is required.";
+  if (!formData.custShipAddId) errors.custShipAddId = "Machine Location is required.";
+  if (!formData.mcnId) errors.mcnId = "Machine Serial Number is required.";
+  if (!formData.prblmDesc) errors.prblmDesc = "Problem Description is required.";
+  if (!formData.remarks) errors.remarks = "Remarks is required.";
+  if (!formData.regionalId) errors.regionalId = "Region is required.";
+  if (!formData.branchId) errors.branchId = "Branch is required.";
+  if (!formData.locId) errors.locId = "Location is required.";
+  if (!formData.empAssignId) errors.empAssignId = "Assigned Employee is required.";
+
+  return errors;
+};

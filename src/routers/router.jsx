@@ -14,6 +14,7 @@ import ProductForm from "../components/Product/ProductForm";
 import Machines from "../pages/Machines";
 import MachineForm from "../components/Machine/MachineForm";
 import Tickets from "../pages/Tickets";
+import TicketForm from "../components/Ticket/TicketForm";
 
 export const routes = [
   {
@@ -41,6 +42,7 @@ export const routes = [
           { path: "/machines", element: <Machines /> },
           { path: "/machines/add", element: <MachineForm /> },
           { path: "/tickets", element: <Tickets /> },
+          { path: "tickets/add", element: <TicketForm /> },
         ],
       },
     ],
