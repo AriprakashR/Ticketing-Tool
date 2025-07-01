@@ -71,6 +71,44 @@ export const validateMachineForm = (formData) => {
   return errors;
 };
 
+export const validateEmployeeForm = (formData) => {
+  const errors = {};
+
+  const isManagerialDesg = [1, 2, 3].includes(Number(formData.empDesgId));
+
+  // Required Fields
+  if (!formData.empName?.trim()) errors.empName = "Employee Name is required.";
+  if (!formData.empPhNo?.trim()) errors.empPhNo = "Phone Number is required.";
+  if (!formData.empEmail?.trim()) errors.empEmail = "Email is required.";
+  if (!formData.empDesgId) errors.empDesgId = "Employee Designation is required.";
+  if (!formData.regionalId) errors.regionalId = "Region is required.";
+  if (!formData.branchId) errors.branchId = "Branch is required.";
+
+  if (!isManagerialDesg && !formData.locId) {
+    errors.locId = "Location is required.";
+  }
+
+  if (!formData.add1?.trim()) errors.add1 = "Address Line 1 is required.";
+  if (!formData.add2?.trim()) errors.add2 = "Address Line 2 is required.";
+  if (!formData.pincode?.trim()) {
+    errors.pincode = "Pincode is required.";
+  } else if (!/^\d{6}$/.test(formData.pincode)) {
+    errors.pincode = "Pincode must be 6 digits.";
+  }
+  if (!formData.state) errors.state = "State is required.";
+  if (!formData.city) errors.city = "City is required.";
+
+  if (formData.empEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.empEmail)) {
+    errors.empEmail = "Enter a valid email address.";
+  }
+
+  if (formData.empPhNo && !/^[6-9]\d{9}$/.test(formData.empPhNo)) {
+    errors.empPhNo = "Enter a valid 10-digit phone number.";
+  }
+
+  return errors;
+};
+
 export const validateTicketForm = (formData) => {
   const errors = {};
 
