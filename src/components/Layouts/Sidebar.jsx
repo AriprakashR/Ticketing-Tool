@@ -39,8 +39,9 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     { id: 3, icon: "solar:user-speak-rounded-bold-duotone", label: "Employee", path: "/employees" },
     { id: 4, icon: "solar:bag-smile-bold-duotone", label: "Product", path: "/products" },
     { id: 5, icon: "solar:washing-machine-bold-duotone", label: "Machine", path: "/machines" },
-    { id: 6, icon: "solar:chart-2-bold-duotone", label: "Reports", path: "/reports" },
-    { id: 7, icon: "solar:settings-bold-duotone", label: "Settings", path: "/settings" },
+    { id: 6, icon: "solar:ticket-bold-duotone", label: "Ticket", path: "/tickets" },
+    { id: 7, icon: "solar:chart-2-bold-duotone", label: "Reports", path: "/reports" },
+    { id: 8, icon: "solar:settings-bold-duotone", label: "Settings", path: "/settings" },
   ];
 
   const renderListItem = (id, icon, label, path) => {
