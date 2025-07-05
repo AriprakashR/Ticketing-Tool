@@ -13,11 +13,25 @@ import {
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { Icon } from "@iconify/react";
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { postEmployeeLogout } from "../../api/auth-service";
 
 const ProfileSlider = ({ open, onClose }) => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
   const iconColor = isDarkMode ? "#919EAB" : "#637381";
+  const [loading, setLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setLoading(true);
+    const res = await postEmployeeLogout();
+    if (res?.status === 200) {
+      navigate("/");
+    }
+  };
+
   return (
     <Drawer
       anchor="right"
@@ -118,6 +132,9 @@ const ProfileSlider = ({ open, onClose }) => {
       <Box sx={{ padding: "20px" }}>
         <Button
           fullWidth
+          onClick={handleLogout}
+          loading={loading}
+          loadingPosition="start"
           sx={{
             height: "48px",
             fontWeight: 700,
