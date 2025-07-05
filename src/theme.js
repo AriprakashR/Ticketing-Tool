@@ -1,3 +1,8 @@
+import "@fontsource/public-sans/400.css";
+import "@fontsource/public-sans/700.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/roboto/400.css";
+
 import { createTheme } from "@mui/material/styles";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 
@@ -18,7 +23,7 @@ const baseSettings = {
     borderRadius: 8,
   },
   typography: {
-    fontFamily: `"Public Sans Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
+    fontFamily: `'Public Sans', Inter, Roboto, sans-serif`,
     button: {
       textTransform: "none",
     },
